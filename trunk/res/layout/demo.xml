@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="match_parent">
+	<LinearLayout android:layout_width="match_parent"
+		android:id="@+id/linearLayout1" android:layout_height="match_parent" android:orientation="vertical">
+
+ <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#000000"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/separator1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/separator" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/mediaInfoTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="#FFFFFF"
+                android:textSize="12px"
+                android:typeface="normal" >
+            </TextView>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:cacheColorHint="#00000000">
+
+
+
+                <VideoView
+                    android:id="@+id/videoView1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="180dp"
+                    android:cacheColorHint="#00000000" />
+
+                <!--
+                <ImageView
+                         android:id="@+id/icon_play"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_centerInParent="true"
+                         android:src="@drawable/go2" > 
+                </ImageView>
+                -->
+
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="12px"
+                android:layout_gravity="center"
+                android:layout_marginTop="5px"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_drawable"
+                android:secondaryProgress="0" >
+            </ProgressBar>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp" >
+
+                <Button
+                    android:id="@+id/buttonPause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/pause_button"
+                    android:onClick="playMedia"
+                    android:visibility="gone" >
+                </Button>
+
+                <Button
+                    android:id="@+id/buttonPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/play_button"
+                    android:onClick="playMedia" >
+                </Button>
+
+                <Button
+                    android:id="@+id/buttonStop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/stop_button"
+                    android:onClick="stopMedia" >
+                </Button>
+
+                <Button
+                    android:id="@+id/Button01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/zoom_in"
+                    android:onClick="zoomIn" />
+
+                <TextView
+                    android:id="@+id/timeElapsed"
+                    android:layout_width="112dp"
+                    android:layout_height="fill_parent"
+                    android:gravity="right"
+                    android:text="--:--"
+                    android:textColor="#80CAE517"
+                    android:textSize="16px"
+                    android:textStyle="bold"
+                    android:typeface="normal" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/timeSeparator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="/"
+                    android:textColor="#80CAE517"
+                    android:textSize="16px"
+                    android:textStyle="bold"
+                    android:typeface="normal" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:textColor="#80CAE517"
+                    android:textSize="16px"
+                    android:textStyle="bold"
+                    android:typeface="normal" >
+                </TextView>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/clipkhac" >
+            </ImageView>
+        </LinearLayout>
+
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+
+<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+		
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+			android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
+			android:baselineAligned="true" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<LinearLayout android:layout_height="wrap_content"
+				android:id="@+id/linearLayout3" android:layout_width="wrap_content">
+				<ImageView android:padding="2dp" android:id="@+id/imageView1"
+					android:layout_width="fill_parent" android:layout_height="fill_parent"
+					android:scaleType="fitXY" android:layout_marginTop="10dp"
+					android:paddingLeft="2dp" android:paddingRight="2dp" android:src="@drawable/bg"
+					android:background="#ffffff" android:layout_gravity="center_vertical|center_horizontal"></ImageView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:background="@drawable/title"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/txtTitle" android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:layout_marginBottom="10dp"
+					android:layout_marginTop="10dp" android:layout_weight="1"
+					android:gravity="center" android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="bold" />
+
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_weight="1" android:background="@drawable/timer"
+				android:gravity="right|center">
+
+				<TextView android:id="@+id/txtDateTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_gravity="right|fill" android:layout_marginLeft="10dp"
+					android:layout_weight="1" android:gravity="center_vertical"
+					android:text="TextView" android:textColor="#ffffff"
+					android:textSize="12dp" android:textStyle="normal" />
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+
+
+</ScrollView>
