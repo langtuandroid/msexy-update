@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.FileManager;
 import com.hdc.ultilities.Image;

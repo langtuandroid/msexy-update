@@ -39,6 +39,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hdc.data.Item;
+import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.FileManager;
 import com.hdc.view.ListRecordAdapter;

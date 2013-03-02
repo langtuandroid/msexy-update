@@ -19,24 +19,30 @@
  * limitations under the License.
  * #L%
  */
-package com.hdc.taoviec.myvideo;
+package com.hdc.msexy;
 
 import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.hdc.msexy.R;
+import com.hdc.taoviec.myvideo.MyHorizontalScrollView;
 import com.hdc.taoviec.myvideo.MyHorizontalScrollView.SizeCallback;
+import com.hdc.taoviec.myvideo.ViewUtils;
+import com.hdc.ultilities.ConnectServer;
+import com.hdc.view.MyAdapter;
 
 /**
  * This demo uses a custom HorizontalScrollView that ignores touch events, and therefore does NOT allow manual scrolling.
@@ -56,6 +62,9 @@ public class HorzScrollWithListMenu extends Activity {
     int btnWidth;
     int width,height;
     //static int menuWidth;
+    GridView gridview;
+    LinearLayout layout_search;
+    ImageView imgSearch;
     
     
     @Override
@@ -71,7 +80,34 @@ public class HorzScrollWithListMenu extends Activity {
         menu = inflater.inflate(R.layout.horz_scroll_menu, null);
         //app = inflater.inflate(R.layout.horz_scroll_app, null);
         app = inflater.inflate(R.layout.listvideo_1, null);
-        //ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);
+        //ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);                
+        
+		gridview = (GridView) app.findViewById(R.id.gridView1);
+		gridview.setAdapter(new MyAdapter(this,ConnectServer.instance.m_ListItem,R.layout.items_new_1));
+		//gridview.setNumColumns(1);
+		
+		layout_search = (LinearLayout)app.findViewById(R.id.layout_search);
+		imgSearch = (ImageView)app.findViewById(R.id.imageView3);
+		imgSearch.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				layout_search.setVisibility(View.VISIBLE);
+			}
+		});
+		
+		
+    	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			System.out.println("Landscape");
+			gridview.setNumColumns(2);
+
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			System.out.println("porttrait");
+			gridview.setNumColumns(1);
+		}
+
+        
 
         ListView listView = null;
 //        ListView listView = (ListView) app.findViewById(R.id.list);
@@ -176,7 +212,7 @@ public class HorzScrollWithListMenu extends Activity {
             dims[1] = h;
             final int menuIdx = 0;
             if (idx == menuIdx) {
-                dims[0] = w - btnWidth;
+                dims[0] = w - 2*btnWidth;
             }
         }
     }

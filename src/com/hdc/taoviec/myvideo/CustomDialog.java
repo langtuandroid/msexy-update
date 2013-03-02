@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hdc.data.Item;
+import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.SendSMS;
 
