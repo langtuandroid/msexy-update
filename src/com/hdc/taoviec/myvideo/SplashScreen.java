@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.hdc.ultilities.ConnectServer;
@@ -32,6 +34,8 @@ public class SplashScreen extends Activity implements Runnable{
 	public int flagVersion = 0;
 	public boolean isConnect = true;
 	public AlertDialog alert;
+	public boolean isAirPlane;
+	public boolean isSim;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,24 +44,87 @@ public class SplashScreen extends Activity implements Runnable{
 		setContentView(R.layout.splash);
 		
 		instance = this;
-		// TODO width and height
-		getWidth_Heigh();
 		//TODO check connect internet
 		checkConnectInternet();
 		
-		//TODO get provider_id & link_update & Ref_code
-		// read file from drawable
-		getInfoFromFile();
+		isAirPlane = isAirplaneModeOn(instance);
 		
-		// TODO init alert Dialog for Update new version
-		initDialog_UpdateNewVersion();		
+		if (isConnect) {
+			ConnectServer.instance.MyModel = android.os.Build.MODEL;
+			ConnectServer.instance.MyBrand = android.os.Build.MANUFACTURER;
+
+			// TODO width and height
+			getWidth_Heigh();
+
+			//TODO get provider_id & link_update & Ref_code
+			// read file from drawable
+			getInfoFromFile();
+
+			// TODO check sim card
+			isSim = checkSimCard();
+
+			// TODO init alert Dialog for Update new version
+			initDialog_UpdateNewVersion();
+
+			// TODO init dialog
+			initDialog_Loading();
+			
+			//TODO init theard
+			initThread();
+
+		}else{
+			AlertDialog.Builder buidler = new AlertDialog.Builder(this);
+			buidler.create();
+			buidler.setTitle("Thông báo");
+			buidler.setMessage("Bạn vui lòng kiểm tra kết nối Internet !!!");
+			buidler.show();
+		}
 		
-		//TODO init dialog
-		initDialog_Loading();
 		
-		//TODO init theard
-		initThread();
+		
 	}
+	
+	// TODO check sim card
+	private boolean checkSimCard() {
+		boolean kq = true;
+		TelephonyManager telMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		int simState = telMgr.getSimState();
+		switch (simState) {
+		case TelephonyManager.SIM_STATE_ABSENT:
+			// do something
+			kq = false;
+			break;
+		case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+			// do something
+			kq = true;
+			break;
+		case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+			// do something
+			kq = true;
+			break;
+		case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+			// do something
+			kq = true;
+			break;
+		case TelephonyManager.SIM_STATE_READY:
+			// do something
+			kq = true;
+			break;
+		case TelephonyManager.SIM_STATE_UNKNOWN:
+			// do something
+			kq = true;
+			break;
+		}
+		return kq;
+	}
+
+	
+	private static boolean isAirplaneModeOn(Context context) {
+
+		return Settings.System.getInt(context.getContentResolver(),
+				Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+
+	}	
 	
 	//TODO init thread for check appID and load ListVideo
 	private void initThread(){
@@ -167,8 +234,18 @@ public class SplashScreen extends Activity implements Runnable{
 		//TODO get list category
 		getListCategory();
 		
-		//TODO send message
+		ConnectServer.instance.getActive();
+		
+		TelephonyManager manager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		String carrierName = manager.getNetworkOperatorName(); //mobi
+		ConnectServer.instance.m_Sms.detectThueBao(carrierName);
+		
+		//TODO getsms
+		ConnectServer.instance.getSMS();		
+		
+		// TODO send message
 		mHandler.sendEmptyMessage(-1);
+
 	}
 	
 	private Handler mHandler = new Handler(){
