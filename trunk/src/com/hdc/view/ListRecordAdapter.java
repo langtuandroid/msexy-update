@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hdc.data.Item;
-import com.hdc.taoviec.myvideo.R;
+import com.hdc.msexy.R;
 
 public class ListRecordAdapter extends ArrayAdapter<Item> {
 

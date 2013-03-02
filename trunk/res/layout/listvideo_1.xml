@@ -151,8 +151,7 @@
                 android:layout_height="wrap_content"
                 android:background="#fcf7f5"
                 android:gravity="center_vertical|center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone" >
+                android:orientation="horizontal" android:visibility="gone" android:id="@+id/layout_search">
 
                 <EditText
                     android:id="@+id/editText2"
@@ -181,7 +180,7 @@
         <TableLayout
             android:id="@+id/tableLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent" android:background="#fcf7f5">
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -203,13 +202,9 @@
                 </GridView>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="#242424"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical" >
+                    android:orientation="vertical" android:background="#fcf7f5" android:layout_width="fill_parent" android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/promotion"

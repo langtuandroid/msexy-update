@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.hdc.taoviec.myvideo.R;
+import com.hdc.msexy.R;
 
 public class MyCustomSpinner extends ArrayAdapter<String> {
 

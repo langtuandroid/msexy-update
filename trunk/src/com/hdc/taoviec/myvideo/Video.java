@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.hdc.msexy.R;
+
 public class Video extends Activity {
 
 	MediaController mc;

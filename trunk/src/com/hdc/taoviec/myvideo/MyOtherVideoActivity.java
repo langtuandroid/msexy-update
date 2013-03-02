@@ -45,6 +45,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hdc.data.Item;
+import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.DownloadImage;
 import com.hdc.view.ListRecordAdapter;

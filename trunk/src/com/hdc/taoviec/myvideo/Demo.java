@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.hdc.msexy.R;
+
 public class Demo extends Activity {
 	
 	MediaController mc ;

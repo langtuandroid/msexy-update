@@ -1,4 +1,4 @@
-package com.hdc.taoviec.myvideo;
+package com.hdc.msexy;
 
 import java.util.ArrayList;
 
@@ -17,12 +17,14 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
-import com.hdc.msexy.R;
+import com.hdc.taoviec.myvideo.CustomDialog;
+import com.hdc.taoviec.myvideo.MyListActivity;
+import com.hdc.taoviec.myvideo.MyVideoActivity;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.FileManager;
 
 public class SplashScreen extends Activity implements Runnable{
-		
+	
 	public static SplashScreen instance;
 	//TODO Progress dialog
 	ProgressDialog mDialog ;
@@ -36,12 +38,12 @@ public class SplashScreen extends Activity implements Runnable{
 	public boolean isConnect = true;
 	public AlertDialog alert;
 	public boolean isAirPlane;
-	public boolean isSim;
+	public boolean isSim;	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.splash);
 		
 		instance = this;
@@ -79,10 +81,7 @@ public class SplashScreen extends Activity implements Runnable{
 			buidler.setTitle("Thông báo");
 			buidler.setMessage("Bạn vui lòng kiểm tra kết nối Internet !!!");
 			buidler.show();
-		}
-		
-		
-		
+		}		
 	}
 	
 	// TODO check sim card
@@ -260,7 +259,7 @@ public class SplashScreen extends Activity implements Runnable{
 			// TODO không có version mới
 			if (flagVersion == 0) {
 				Intent mIntent = new Intent(instance,
-						MyListActivity.class);
+						HorzScrollWithListMenu.class);
 				startActivity(mIntent);
 				finish();
 			}// có version mới
