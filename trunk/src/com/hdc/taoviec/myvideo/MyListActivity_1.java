@@ -119,7 +119,17 @@ public class MyListActivity_1 extends Activity implements OnClickListener, Runna
 
 		gridview = (GridView) findViewById(R.id.gridView1);
 		gridview.setAdapter(new MyAdapter(this));
-		gridview.setNumColumns(1);
+		//gridview.setNumColumns(1);
+		
+    	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			System.out.println("Landscape");
+			gridview.setNumColumns(2);
+
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			System.out.println("porttrait");
+			gridview.setNumColumns(1);
+		}
+
 		
 	}
 	
