@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.hdc.data.Item;
 import com.hdc.msexy.R;
+import com.hdc.ultilities.CustomFontsLoader;
 
 public class MyAdapter extends BaseAdapter {
 	private Context mContext;
@@ -61,14 +62,18 @@ public class MyAdapter extends BaseAdapter {
 
 			if (title != null) {
 				title.setText(item.getTitle());
+				CustomFontsLoader.setFont(title, 0, mContext);
 			}
 			if (date != null) {
 				date.setText("Views:" + item.getDownload());
+				CustomFontsLoader.setFont(date, 0, mContext);
 			}
 			if(!item.getDuration().equals("null")){
 				duration.setText("" + item.getDuration());
+				CustomFontsLoader.setFont(duration, 0, mContext);
 			}else{
 				duration.setText(/*"Times: " + "01:00"*/"");
+				CustomFontsLoader.setFont(duration, 0, mContext);
 			}
 			if (image != null && item.getImg()!=null) {
 				try {					

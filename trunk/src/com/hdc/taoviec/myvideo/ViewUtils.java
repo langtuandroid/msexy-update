@@ -21,6 +21,9 @@
  */
 package com.hdc.taoviec.myvideo;
 
+import com.hdc.msexy.HorzScrollWithListMenu;
+import com.hdc.ultilities.ConnectServer;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,6 +76,27 @@ public class ViewUtils {
                 String msg = "item[" + position + "]=" + parent.getItemAtPosition(position);
                 Toast.makeText(context, msg, 1000).show();
                 System.out.println(msg);
+            }
+        });
+    }
+    
+    public static void initListView(Context context, ListView listView, int layout) {
+        // By using setAdpater method in listview we an add string array in list.
+        String[] arr = new String[ConnectServer.instance.m_ListCategory.size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = ConnectServer.instance.m_ListCategory.get(i).name;
+        }
+        listView.setAdapter(new ArrayAdapter<String>(context, layout, arr));
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = view.getContext();
+//                String msg = "item[" + position + "]=" + parent.getItemAtPosition(position);
+//                Toast.makeText(context, msg, 1000).show();
+//                System.out.println(msg);
+                HorzScrollWithListMenu.instance.select_Menu_Item(position);
+                
+                
             }
         });
     }
