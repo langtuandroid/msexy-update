@@ -1219,7 +1219,6 @@ public class MyListActivity extends Activity implements OnClickListener, Runnabl
 				Toast.makeText(instance, "Không tìm thấy dữ liệu !!!", Toast.LENGTH_LONG).show();
 				// v.setVisibility(View.VISIBLE);
 			}
-
 		}
 	}
 
