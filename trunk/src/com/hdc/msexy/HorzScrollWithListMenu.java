@@ -139,7 +139,7 @@ public class HorzScrollWithListMenu extends Activity {
 				}
 				
 				// // TODO Còn sử dụng
-				if (ConnectServer.instance.isSim) {
+				if (!ConnectServer.instance.isSim) {
 					if (ConnectServer.instance.m_Active.status.trim().equals("1")) {
 						CustomDialog.transferActivity(arrayItem.get(pos), 0, instance);
 					} else if (ConnectServer.instance.m_Active.status.trim().equals("0")) {

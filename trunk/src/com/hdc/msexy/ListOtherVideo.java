@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -47,6 +48,7 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -157,6 +159,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	MediaController mc;
 	VideoView mVideo;
 
+	TableLayout table_header;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -185,45 +189,42 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			// TODO VIDEO
 			/* variables init */
 //			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			VideoView vv = (VideoView) findViewById(R.id.videoView1);
+			vv = (VideoView) findViewById(R.id.videoView1);
 //			// listeners for VideoView:
-//			vv.setOnErrorListener(this);
-//			vv.setOnPreparedListener(this);
+			vv.setOnErrorListener(this);
+			vv.setOnPreparedListener(this);
 
-//			play = (Button) findViewById(R.id.buttonPlay);
-//			stop = (Button) findViewById(R.id.buttonPause);
-////			logo = (ImageView) findViewById(R.id.icon_play);
-//
-//			mediaInfo = (TextView) findViewById(R.id.mediaInfoTitle);
-//			mediaInfo.setText(title);
-//			mediaTime = (TextView) findViewById(R.id.time);
-//			mediaTimeElapsed = (TextView) findViewById(R.id.timeElapsed);
-//
-//			progress = (ProgressBar) findViewById(R.id.progressBar);
-//			loading = new ProgressDialog(this);
-//			loading.setMessage("Xin chờ...");
+			mediaTime = (TextView) findViewById(R.id.time);
+			mediaTimeElapsed = (TextView) findViewById(R.id.timeElapsed);
+
+			progress = (ProgressBar) findViewById(R.id.progressBar);
+			loading = new ProgressDialog(this);
+			loading.setMessage("Xin chờ...");
 //
 //			vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 //
-//			readyToPlay = false;
-//
-//			initMedia();
+			readyToPlay = false;
+
+			initMedia();
+			//playMedia(null);
 			// END
+			
+			table_header = (TableLayout)findViewById(R.id.table_header);
 
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			mc = new MediaController(this);
-
-			mVideo = (VideoView) findViewById(R.id.videoView1);
-			mVideo.setMediaController(mc);
-			mc.setAnchorView(mVideo);
-			mVideo.setMediaController(mc);						
-			mVideo.getHolder().setFixedSize(800, 480);
+			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//			mc = new MediaController(this);
+//			mVideo = (VideoView) findViewById(R.id.videoView1);
+//			mVideo.setMediaController(mc);
+//			mc.setAnchorView(mVideo);
+//			mVideo.setMediaController(mc);						
+			
+			setSizeVideo();
 			
 			// String uriPath = "android.resource://com.hdc.mycasino/raw/hdc";
-			Uri uri = Uri.parse(file);
-			mVideo.setVideoURI(uri);
-			mVideo.requestFocus();
-			mVideo.start();
+//			Uri uri = Uri.parse(file);
+//			mVideo.setVideoURI(uri);
+//			mVideo.requestFocus();
+//			mVideo.start();
 
 			
 //			// TODO init button search
@@ -295,6 +296,31 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setSizeVideo(){
+		LayoutParams params = vv.getLayoutParams();		
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			table_header.setVisibility(View.GONE);
+			params.width = ConnectServer.instance.height;
+			params.height = ConnectServer.instance.width;
+
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			table_header.setVisibility(View.VISIBLE);
+			params.width = ConnectServer.instance.width;
+			params.height = ConnectServer.instance.height/2;
+		}		
+		vv.setLayoutParams(params);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub		
+		setSizeVideo();
+		
+		super.onConfigurationChanged(newConfig);
 	}
 	
 	// TODO init edit text
@@ -717,7 +743,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		// buttonVibrate();
 
 		readyToPlay = false;
-		stopMedia(null);
+		//stopMedia(null);
 
 		Uri uri = Uri.parse(/* url.getText().toString() */file);
 		// mediaInfo.setText(uri.getLastPathSegment());
@@ -739,7 +765,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	 *            View the touch event has been dispatched to
 	 */
 	public void stopMedia(View v) {
-		buttonVibrate();
+		///buttonVibrate();
 		if (play.getVisibility() == Button.GONE) {
 			stop.setVisibility(Button.GONE);
 			play.setVisibility(Button.VISIBLE);
@@ -786,8 +812,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		loading.hide();
 
 		// video size check (media is a video if size is defined, audio if not)
-		int h = mp.getVideoHeight();
-		int w = mp.getVideoWidth();
+//		int h = mp.getVideoHeight();
+//		int w = mp.getVideoWidth();
 //		if (h != 0 && w != 0) {
 //			Log.d(this.getClass().getName(), "logo off");
 //			logo.setVisibility(ImageView.INVISIBLE);
@@ -797,20 +823,20 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //		}
 
 		// onVideoSizeChangedListener declaration
-		mp.setOnVideoSizeChangedListener(new OnVideoSizeChangedListener() {
-			// video size check (media is a video if size is defined, audio if
-			// not)
-			@Override
-			public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-				if (width != 0 && height != 0) {
-					Log.d(this.getClass().getName(), "logo off");
-					logo.setVisibility(ImageView.INVISIBLE);
-				} else {
-					Log.d(this.getClass().getName(), "logo on");
-					logo.setVisibility(ImageView.VISIBLE);
-				}
-			}
-		});
+//		mp.setOnVideoSizeChangedListener(new OnVideoSizeChangedListener() {
+//			// video size check (media is a video if size is defined, audio if
+//			// not)
+//			@Override
+//			public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+//				if (width != 0 && height != 0) {
+//					Log.d(this.getClass().getName(), "logo off");
+//					logo.setVisibility(ImageView.INVISIBLE);
+//				} else {
+//					Log.d(this.getClass().getName(), "logo on");
+//					logo.setVisibility(ImageView.VISIBLE);
+//				}
+//			}
+//		});
 
 		// onBufferingUpdateListener declaration
 		mp.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
@@ -855,7 +881,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 			@Override
 			public void onFinish() {
-				stopMedia(null);
+				//stopMedia(null);
 			}
 		};
 
@@ -901,14 +927,14 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //		buttonVibrate();
 		if (readyToPlay) {
 			if (v == play) {
-				play.setVisibility(Button.GONE);
-				stop.setVisibility(Button.VISIBLE);
+//				play.setVisibility(Button.GONE);
+//				stop.setVisibility(Button.VISIBLE);
 
 				vv.start();
 				timer.start();
 			} else {
-				stop.setVisibility(Button.GONE);
-				play.setVisibility(Button.VISIBLE);
+//				stop.setVisibility(Button.GONE);
+//				play.setVisibility(Button.VISIBLE);
 
 				vv.pause();
 				timer.cancel();
