@@ -91,6 +91,11 @@ public class ConnectServer {
 	public ArrayList<Category> m_ListCategory = new ArrayList<Category>();
 	public Active m_Active = new Active();
 	public boolean flagSearch = true;
+	
+	//TODO Condition
+	public boolean isAirPlane;
+	public boolean isSim;	
+
 
 	// contructor
 	public ConnectServer() {

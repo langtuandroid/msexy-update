@@ -51,6 +51,7 @@ public class SplashScreen extends Activity implements Runnable{
 		checkConnectInternet();
 		
 		isAirPlane = isAirplaneModeOn(instance);
+		ConnectServer.instance.isAirPlane = isAirPlane;
 		
 		if (isConnect) {
 			ConnectServer.instance.MyModel = android.os.Build.MODEL;
@@ -65,6 +66,7 @@ public class SplashScreen extends Activity implements Runnable{
 
 			// TODO check sim card
 			isSim = checkSimCard();
+			ConnectServer.instance.isSim = isSim;
 
 			// TODO init alert Dialog for Update new version
 			initDialog_UpdateNewVersion();
@@ -258,6 +260,7 @@ public class SplashScreen extends Activity implements Runnable{
 			
 			// TODO không có version mới
 			if (flagVersion == 0) {
+				ConnectServer.instance.pageCurrent = 1;
 				Intent mIntent = new Intent(instance,
 						HorzScrollWithListMenu.class);
 				startActivity(mIntent);
