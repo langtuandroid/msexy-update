@@ -38,6 +38,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -50,6 +52,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hdc.data.Item;
+import com.hdc.taoviec.myvideo.CustomDialog;
 import com.hdc.taoviec.myvideo.MyHorizontalScrollView;
 import com.hdc.taoviec.myvideo.MyHorizontalScrollView.SizeCallback;
 import com.hdc.taoviec.myvideo.ViewUtils;
@@ -58,38 +61,40 @@ import com.hdc.ultilities.CustomFontsLoader;
 import com.hdc.view.MyAdapter;
 
 /**
- * This demo uses a custom HorizontalScrollView that ignores touch events, and therefore does NOT allow manual scrolling.
+ * This demo uses a custom HorizontalScrollView that ignores touch events, and
+ * therefore does NOT allow manual scrolling.
  * 
  * The only scrolling allowed is scrolling in code triggered by the menu button.
  * 
- * When the button is pressed, both the menu and the app will scroll. So the menu isn't revealed from beneath the app, it
- * adjoins the app and moves with the app.
+ * When the button is pressed, both the menu and the app will scroll. So the
+ * menu isn't revealed from beneath the app, it adjoins the app and moves with
+ * the app.
  */
 public class HorzScrollWithListMenu extends Activity {
-    MyHorizontalScrollView scrollView;
-    View menu;
-    View app;
-    ImageView btnSlide;
-    boolean menuOut = false;
-    Handler handler = new Handler();
-    int btnWidth;
-    int width,height;
-    //static int menuWidth;
-    GridView gridview;
-    LinearLayout layout_search;
-    boolean flag_Visile_Search = false;
-    ImageView imgSearch;
-    EditText txt_search;
-    Button bt_search;
-    MyAdapter adapter;
-    String m_keyword = "";
-    ArrayList<Item> arrayItem = new ArrayList<Item>();
-    public static HorzScrollWithListMenu instance;
-    ClickListenerForScrolling clickListener;
-    TextView txt_hot;
-    TextView txt_new;
-    TextView txt_top;
-    
+	MyHorizontalScrollView scrollView;
+	View menu;
+	View app;
+	ImageView btnSlide;
+	boolean menuOut = false;
+	Handler handler = new Handler();
+	int btnWidth;
+	int width, height;
+	// static int menuWidth;
+	GridView gridview;
+	LinearLayout layout_search;
+	boolean flag_Visile_Search = false;
+	ImageView imgSearch;
+	EditText txt_search;
+	Button bt_search;
+	MyAdapter adapter;
+	String m_keyword = "";
+	ArrayList<Item> arrayItem = new ArrayList<Item>();
+	public static HorzScrollWithListMenu instance;
+	ClickListenerForScrolling clickListener;
+	TextView txt_hot;
+	TextView txt_new;
+	TextView txt_top;
+
 	// TODO Pagging
 	private Button m_BtPrevious;
 	private Button m_BtPage_1;
@@ -97,51 +102,90 @@ public class HorzScrollWithListMenu extends Activity {
 	private Button m_BtPage_3;
 	private Button m_BtNext;
 	// TODO flag Pagging
-	private int flag_FocusPage = 1;
+	private static int flag_FocusPage = 1;
 
-    
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu, null);
-        setContentView(scrollView);
+		LayoutInflater inflater = LayoutInflater.from(this);
+		scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu,
+				null);
+		setContentView(scrollView);
 
-        instance = this;
-        
-        //getWidth_Heigh();
-        
-        menu = inflater.inflate(R.layout.horz_scroll_menu, null);
-        //app = inflater.inflate(R.layout.horz_scroll_app, null);
-        app = inflater.inflate(R.layout.listvideo_1, null);
-        //ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);                
-        
+		instance = this;
+
+		// getWidth_Heigh();
+
+		menu = inflater.inflate(R.layout.horz_scroll_menu, null);
+		// app = inflater.inflate(R.layout.horz_scroll_app, null);
+		app = inflater.inflate(R.layout.listvideo_1, null);
+		// ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);
+
 		gridview = (GridView) app.findViewById(R.id.gridView1);
 		arrayItem = ConnectServer.instance.m_ListItem;
-		adapter = new MyAdapter(this,arrayItem,R.layout.items_new_1);
+		adapter = new MyAdapter(this, arrayItem, R.layout.items_new_1);
 		gridview.setAdapter(adapter);
-		//gridview.setNumColumns(1);
-		
-		layout_search = (LinearLayout)app.findViewById(R.id.layout_search);
-		imgSearch = (ImageView)app.findViewById(R.id.imageView3);
-		imgSearch.setOnClickListener(new OnClickListener() {
-			
+		gridview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
 				// TODO Auto-generated method stub
-				if(!flag_Visile_Search)
-					layout_search.setVisibility(View.VISIBLE);
-				else
-					layout_search.setVisibility(View.GONE);
-				flag_Visile_Search=!flag_Visile_Search;
+				if(ConnectServer.instance.isAirPlane){
+					Toast.makeText(
+							instance,
+							"Máy bạn đang để chế độ máy bay \n nên không xem được video",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				// // TODO Còn sử dụng
+				if (ConnectServer.instance.isSim) {
+					if (ConnectServer.instance.m_Active.status.trim().equals("1")) {
+						CustomDialog.transferActivity(arrayItem.get(pos), 0, instance);
+					} else if (ConnectServer.instance.m_Active.status.trim().equals("0")) {
+						if (ConnectServer.instance.isFirstTime.equals("begin")
+								&& ConnectServer.instance.m_Active.msg.trim().equals("1")) {
+//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
+//									instance,false);
+						} else {
+							
+//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
+//									instance,true);													
+						}
+					}
+				} else {
+					Toast.makeText(
+							instance,
+							"Bạn đã không có Sim điện thoại.\n Bạn không thể kích hoạt và sử dụng App được !!!",
+							Toast.LENGTH_LONG).show();
+				}
+				
+
 			}
 		});
 		
-		//search
-		txt_search = (EditText)app.findViewById(R.id.txt_search);
+		
+		// gridview.setNumColumns(1);
+
+		layout_search = (LinearLayout) app.findViewById(R.id.layout_search);
+		imgSearch = (ImageView) app.findViewById(R.id.imageView3);
+		imgSearch.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (!flag_Visile_Search)
+					layout_search.setVisibility(View.VISIBLE);
+				else
+					layout_search.setVisibility(View.GONE);
+				flag_Visile_Search = !flag_Visile_Search;
+			}
+		});
+
+		// search
+		txt_search = (EditText) app.findViewById(R.id.txt_search);
 		txt_search.setOnEditorActionListener(new OnEditorActionListener() {
-			
+
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
@@ -151,38 +195,37 @@ public class HorzScrollWithListMenu extends Activity {
 					new UpdateListView().execute("", m_keyword);
 				}
 
-				
 				return false;
 			}
 		});
-		bt_search = (Button)app.findViewById(R.id.bt_search_1);
+		bt_search = (Button) app.findViewById(R.id.bt_search_1);
 		bt_search.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (!txt_search.getText().toString().equals("")) {
 					new UpdateListView().execute("", txt_search.getText().toString());
 				} else {
-					Toast.makeText(HorzScrollWithListMenu.this, "Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(HorzScrollWithListMenu.this,
+							"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
-		
-		//HOT - NEW - TOP
-		txt_hot = (TextView)app.findViewById(R.id.txt_hot);
+
+		// HOT - NEW - TOP
+		txt_hot = (TextView) app.findViewById(R.id.txt_hot);
 		CustomFontsLoader.setFont(txt_hot, 0, instance);
 		CustomFontsLoader.setUnderline(txt_hot);
-		txt_new = (TextView)app.findViewById(R.id.txt_new);
+		txt_new = (TextView) app.findViewById(R.id.txt_new);
 		CustomFontsLoader.setFont(txt_new, 0, instance);
-		txt_top = (TextView)app.findViewById(R.id.txt_top);
-		CustomFontsLoader.setFont(txt_top, 0, instance);		
-		
-		//TODO page
+		txt_top = (TextView) app.findViewById(R.id.txt_top);
+		CustomFontsLoader.setFont(txt_top, 0, instance);
+
+		// TODO page
 		createFooter(app);
-				
-    	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			System.out.println("Landscape");
 			gridview.setNumColumns(2);
 
@@ -191,32 +234,32 @@ public class HorzScrollWithListMenu extends Activity {
 			gridview.setNumColumns(1);
 		}
 
-        
+		ListView listView = null;
+		// ListView listView = (ListView) app.findViewById(R.id.list);
+		// ViewUtils.initListView(this, listView, "Item ", 30,
+		// android.R.layout.simple_list_item_1);
 
-        ListView listView = null;
-//        ListView listView = (ListView) app.findViewById(R.id.list);
-//        ViewUtils.initListView(this, listView, "Item ", 30, android.R.layout.simple_list_item_1);
+		listView = (ListView) menu.findViewById(R.id.list);
+		// ViewUtils.initListView(this, listView, "Menu ", 30,
+		// android.R.layout.simple_list_item_1);
+		ViewUtils.initListView(this, listView, android.R.layout.simple_list_item_1);
 
-        listView = (ListView) menu.findViewById(R.id.list);
-        //ViewUtils.initListView(this, listView, "Menu ", 30, android.R.layout.simple_list_item_1);
-        ViewUtils.initListView(this, listView, android.R.layout.simple_list_item_1);
+		// btnSlide = (ImageView) tabBar.findViewById(R.id.BtnSlide);
+		btnSlide = (ImageView) app.findViewById(R.id.imageView2);
+		// btnWidth = /*btnSlide.getMeasuredWidth()*/50;
 
-        //btnSlide = (ImageView) tabBar.findViewById(R.id.BtnSlide);
-        btnSlide = (ImageView)app.findViewById(R.id.imageView2);
-        //btnWidth = /*btnSlide.getMeasuredWidth()*/50;
-        
-        clickListener = new ClickListenerForScrolling(scrollView, menu);
-        btnSlide.setOnClickListener(clickListener);
+		clickListener = new ClickListenerForScrolling(scrollView, menu);
+		btnSlide.setOnClickListener(clickListener);
 
-        //menuWidth = width - btnWidth;
-        
-        final View[] children = new View[] { menu, app };
+		// menuWidth = width - btnWidth;
 
-        // Scroll to app (view[1]) when layout finished.
-        int scrollToViewIdx = 1;
-        scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
-    }
-    
+		final View[] children = new View[] { menu, app };
+
+		// Scroll to app (view[1]) when layout finished.
+		int scrollToViewIdx = 1;
+		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
+	}
+
 	class UpdatePage extends AsyncTask<Void, Void, Void> {
 
 		ProgressDialog m_dialog;
@@ -225,16 +268,16 @@ public class HorzScrollWithListMenu extends Activity {
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
-//			if (listrecordarray != null) {
-//				listrecordarray.clear();
-//				// listItems.invalidateViews();
-//			}
+			// if (listrecordarray != null) {
+			// listrecordarray.clear();
+			// // listItems.invalidateViews();
+			// }
 
 			// m_dialog = new ProgressDialog(instance);
 			// m_dialog.setMessage("Xin chờ ...");
 			// m_dialog.show();
 
-			//v.setVisibility(View.GONE);
+			// v.setVisibility(View.GONE);
 
 			customDialog = new Dialog(instance,
 					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
@@ -264,21 +307,20 @@ public class HorzScrollWithListMenu extends Activity {
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			//updateListView();
+			// updateListView();
 			// m_dialog.dismiss();
-			
+
 			arrayItem = ConnectServer.instance.m_ListItem;
-			adapter = new MyAdapter(HorzScrollWithListMenu.this,arrayItem,R.layout.items_new_1);
+			adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem, R.layout.items_new_1);
 			gridview.setAdapter(adapter);
 
-			
 			customDialog.dismiss();
 
-			//v.setVisibility(View.VISIBLE);
+			// v.setVisibility(View.VISIBLE);
 		}
 	}
-    
-	//TextView t;
+
+	// TextView t;
 	ImageView promotion;
 
 	// TODO create footer for listview (pagging)
@@ -286,7 +328,7 @@ public class HorzScrollWithListMenu extends Activity {
 		//TODO get promotion
 		ConnectServer.instance.getPromotion();
 		
-		ConnectServer.instance.pageCurrent = 1;
+		//ConnectServer.instance.pageCurrent = 1;
 
 //		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		View v = (View) inflater.inflate(R.layout.page, null, false);
@@ -298,6 +340,21 @@ public class HorzScrollWithListMenu extends Activity {
 		m_BtPage_3 = (Button) v.findViewById(R.id.page_3);
 		m_BtNext = (Button) v.findViewById(R.id.page_next);
 		promotion = (ImageView) v.findViewById(R.id.promotion);
+
+		
+		if(flag_FocusPage == 1){
+			m_BtPage_1.setText(ConnectServer.instance.pageCurrent+"");
+			m_BtPage_2.setText((ConnectServer.instance.pageCurrent+1)+"");
+			m_BtPage_3.setText((ConnectServer.instance.pageCurrent +2)+"");
+			
+			CustomFontsLoader.setUnderline(m_BtPage_1);
+		}else if(flag_FocusPage == 2){
+			CustomFontsLoader.setUnderline(m_BtPage_2);
+		}else{
+			CustomFontsLoader.setUnderline(m_BtPage_3);
+		}
+						
+		
 		if (ConnectServer.instance.m_Promotion.getImg() != null) {
 			promotion.setVisibility(ImageView.VISIBLE);
 			promotion.setImageBitmap(ConnectServer.instance.m_Promotion.getImg());
@@ -343,10 +400,18 @@ public class HorzScrollWithListMenu extends Activity {
 					break;
 				case 2:
 					flag_FocusPage = 1;
+					m_BtPage_1.setText(m_BtPage_1.getText().toString());
+					m_BtPage_2.setText(m_BtPage_2.getText().toString());
+					m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
 					CustomFontsLoader.setUnderline(m_BtPage_1);
 					break;
 				case 3:
 					flag_FocusPage = 2;
+					m_BtPage_1.setText(m_BtPage_1.getText().toString());
+					m_BtPage_2.setText(m_BtPage_2.getText().toString());
+					m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
 					CustomFontsLoader.setUnderline(m_BtPage_2);
 					break;
 				default:
@@ -380,9 +445,12 @@ public class HorzScrollWithListMenu extends Activity {
 					m_BtPrevious.setVisibility(Button.VISIBLE);
 				else
 					m_BtPrevious.setVisibility(Button.GONE);
+				
+				m_BtPage_1.setText(m_BtPage_1.getText().toString());
+				m_BtPage_2.setText(m_BtPage_2.getText().toString());
+				m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
 				CustomFontsLoader.setUnderline(m_BtPage_1);
-				CustomFontsLoader.setNoUnderline(m_BtPage_2);
-				CustomFontsLoader.setNoUnderline(m_BtPage_3);
 				new UpdatePage().execute();
 			}
 		});
@@ -402,9 +470,12 @@ public class HorzScrollWithListMenu extends Activity {
 
 				flag_FocusPage = 2;
 				m_BtPrevious.setVisibility(Button.VISIBLE);
+				
+				m_BtPage_1.setText(m_BtPage_1.getText().toString());
+				m_BtPage_2.setText(m_BtPage_2.getText().toString());
+				m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
 				CustomFontsLoader.setUnderline(m_BtPage_2);
-				CustomFontsLoader.setNoUnderline(m_BtPage_1);
-				CustomFontsLoader.setNoUnderline(m_BtPage_3);
 				new UpdatePage().execute();
 
 			}
@@ -425,9 +496,13 @@ public class HorzScrollWithListMenu extends Activity {
 
 				flag_FocusPage = 3;
 				m_BtPrevious.setVisibility(Button.VISIBLE);
+				
+				m_BtPage_1.setText(m_BtPage_1.getText().toString());
+				m_BtPage_2.setText(m_BtPage_2.getText().toString());
+				m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
+				
 				CustomFontsLoader.setUnderline(m_BtPage_3);
-				CustomFontsLoader.setNoUnderline(m_BtPage_1);
-				CustomFontsLoader.setNoUnderline(m_BtPage_3);
 
 				new UpdatePage().execute();
 
@@ -448,6 +523,11 @@ public class HorzScrollWithListMenu extends Activity {
 //					m_BtPage_3.setBackgroundDrawable(getResources()
 //							.getDrawable(R.drawable.title_13));
 					flag_FocusPage = 2;
+					
+					m_BtPage_1.setText(m_BtPage_1.getText().toString());
+					m_BtPage_2.setText(m_BtPage_2.getText().toString());
+					m_BtPage_3.setText(m_BtPage_3.getText().toString());
+					
 					CustomFontsLoader.setUnderline(m_BtPage_2);
 					break;
 				case 2:
@@ -458,6 +538,11 @@ public class HorzScrollWithListMenu extends Activity {
 //					m_BtPage_1.setBackgroundDrawable(getResources()
 //							.getDrawable(R.drawable.title_13));
 					flag_FocusPage = 3;
+
+					m_BtPage_1.setText(m_BtPage_1.getText().toString());
+					m_BtPage_2.setText(m_BtPage_2.getText().toString());
+					m_BtPage_3.setText(m_BtPage_3.getText().toString());
+
 					CustomFontsLoader.setUnderline(m_BtPage_3);
 					break;
 				case 3:
@@ -508,106 +593,105 @@ public class HorzScrollWithListMenu extends Activity {
 
 		//return v;
 	}
-        
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//    	// TODO Auto-generated method stub
-//    	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//			System.out.println("Landscape");				    
-//			menuWidth = height - btnWidth;
-//		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-//			System.out.println("porttrait");
-//			menuWidth = width - btnWidth;
-//		}
-//
-//    	
-//    	super.onConfigurationChanged(newConfig);
-//    }
-    
-    public void select_Menu_Item(int position){
-    	
-    	clickListener.onClick(null);
-    	
-		ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(
-				position).getCatId()
-				+ "";
+
+	// @Override
+	// public void onConfigurationChanged(Configuration newConfig) {
+	// // TODO Auto-generated method stub
+	// if (getResources().getConfiguration().orientation ==
+	// Configuration.ORIENTATION_LANDSCAPE) {
+	// System.out.println("Landscape");
+	// menuWidth = height - btnWidth;
+	// } else if (getResources().getConfiguration().orientation ==
+	// Configuration.ORIENTATION_PORTRAIT) {
+	// System.out.println("porttrait");
+	// menuWidth = width - btnWidth;
+	// }
+	//
+	//
+	// super.onConfigurationChanged(newConfig);
+	// }
+
+	public void select_Menu_Item(int position) {
+
+		clickListener.onClick(null);
+
+		ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(position).getCatId() + "";
 		new UpdateListView().execute(ConnectServer.catID + "", "");
-    }
-    
+	}
 
-    /**
-     * Helper for examples with a HSV that should be scrolled by a menu View's width.
-     */
-    static class ClickListenerForScrolling implements OnClickListener {
-        HorizontalScrollView scrollView;
-        View menu;
-        /**
-         * Menu must NOT be out/shown to start with.
-         */
-        boolean menuOut = false;
+	/**
+	 * Helper for examples with a HSV that should be scrolled by a menu View's
+	 * width.
+	 */
+	static class ClickListenerForScrolling implements OnClickListener {
+		HorizontalScrollView scrollView;
+		View menu;
+		/**
+		 * Menu must NOT be out/shown to start with.
+		 */
+		boolean menuOut = false;
 
-        public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
-            super();
-            this.scrollView = scrollView;
-            this.menu = menu;
-        }
-        
-        @Override
-        public void onClick(View v) {
-            Context context = menu.getContext();
-//            String msg = "Slide " + new Date();
-//            Toast.makeText(context, msg, 1000).show();
-//            System.out.println(msg);
+		public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
+			super();
+			this.scrollView = scrollView;
+			this.menu = menu;
+		}
 
-            int menuWidth = menu.getMeasuredWidth();
+		@Override
+		public void onClick(View v) {
+			Context context = menu.getContext();
+			// String msg = "Slide " + new Date();
+			// Toast.makeText(context, msg, 1000).show();
+			// System.out.println(msg);
 
-            // Ensure menu is visible
-            menu.setVisibility(View.VISIBLE);
+			int menuWidth = menu.getMeasuredWidth();
 
-            if (!menuOut) {
-                // Scroll to 0 to reveal menu
-                int left = 0;
-                scrollView.smoothScrollTo(left, 0);
-            } else {
-                // Scroll to menuWidth so menu isn't on screen.
-                int left = menuWidth;
-                scrollView.smoothScrollTo(left, 0);
-            }
-            menuOut = !menuOut;
-        }
-    }
+			// Ensure menu is visible
+			menu.setVisibility(View.VISIBLE);
 
-    /**
-     * Helper that remembers the width of the 'slide' button, so that the 'slide' button remains in view, even when the menu is
-     * showing.
-     */
-    static class SizeCallbackForMenu implements SizeCallback {
-        int btnWidth;
-        View btnSlide;
+			if (!menuOut) {
+				// Scroll to 0 to reveal menu
+				int left = 0;
+				scrollView.smoothScrollTo(left, 0);
+			} else {
+				// Scroll to menuWidth so menu isn't on screen.
+				int left = menuWidth;
+				scrollView.smoothScrollTo(left, 0);
+			}
+			menuOut = !menuOut;
+		}
+	}
 
-        public SizeCallbackForMenu(View btnSlide) {
-            super();
-            this.btnSlide = btnSlide;
-        }
+	/**
+	 * Helper that remembers the width of the 'slide' button, so that the
+	 * 'slide' button remains in view, even when the menu is showing.
+	 */
+	static class SizeCallbackForMenu implements SizeCallback {
+		int btnWidth;
+		View btnSlide;
 
-        @Override
-        public void onGlobalLayout() {
-            btnWidth = btnSlide.getMeasuredWidth();
-            System.out.println("btnWidth=" + btnWidth);
-        }
+		public SizeCallbackForMenu(View btnSlide) {
+			super();
+			this.btnSlide = btnSlide;
+		}
 
-        @Override
-        public void getViewSize(int idx, int w, int h, int[] dims) {
-            dims[0] = w;
-            dims[1] = h;
-            final int menuIdx = 0;
-            if (idx == menuIdx) {
-                dims[0] = w - 2*btnWidth;
-            }
-        }
-    }
+		@Override
+		public void onGlobalLayout() {
+			btnWidth = btnSlide.getMeasuredWidth();
+			System.out.println("btnWidth=" + btnWidth);
+		}
 
-	
+		@Override
+		public void getViewSize(int idx, int w, int h, int[] dims) {
+			dims[0] = w;
+			dims[1] = h;
+			final int menuIdx = 0;
+			if (idx == menuIdx) {
+				dims[0] = w - 2 * btnWidth;
+			}
+		}
+	}
+
 	class UpdateListView extends AsyncTask<String, Void, Void> {
 
 		ProgressDialog m_dialog;
@@ -621,7 +705,7 @@ public class HorzScrollWithListMenu extends Activity {
 			// m_dialog.setMessage("Đang tải dữ liệu ...");
 			// m_dialog.show();
 
-			//v.setVisibility(View.GONE);
+			// v.setVisibility(View.GONE);
 
 			customDialog = new Dialog(HorzScrollWithListMenu.this,
 					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
@@ -631,7 +715,6 @@ public class HorzScrollWithListMenu extends Activity {
 
 			super.onPreExecute();
 		}
-				
 
 		@Override
 		protected Void doInBackground(String... catId) {
@@ -651,7 +734,7 @@ public class HorzScrollWithListMenu extends Activity {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			ConnectServer.instance.pageCurrent = 1;
-			//adapter.notifyDataSetChanged();
+			// adapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -660,30 +743,30 @@ public class HorzScrollWithListMenu extends Activity {
 			super.onPostExecute(result);
 
 			if (ConnectServer.instance.flagSearch) {
-				//updateListView();
-//				adapter.notifyDataSetChanged();
-//				gridview.setAdapter(adapter);
-				
+				// updateListView();
+				// adapter.notifyDataSetChanged();
+				// gridview.setAdapter(adapter);
+
 				arrayItem = ConnectServer.instance.m_ListItem;
-				adapter = new MyAdapter(HorzScrollWithListMenu.this,arrayItem,R.layout.items_new_1);
+				adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
+						R.layout.items_new_1);
 				gridview.setAdapter(adapter);
 
-				
 				// m_dialog.dismiss();
 				customDialog.dismiss();
-				
-				
-				//v.setVisibility(View.VISIBLE);
+
+				// v.setVisibility(View.VISIBLE);
 			} else {
 				// updateListView();
 				ConnectServer.instance.flagSearch = true;
 				customDialog.dismiss();
-				Toast.makeText(HorzScrollWithListMenu.this, "Không tìm thấy dữ liệu !!!", Toast.LENGTH_LONG).show();
+				Toast.makeText(HorzScrollWithListMenu.this, "Không tìm thấy dữ liệu !!!",
+						Toast.LENGTH_LONG).show();
 				// v.setVisibility(View.VISIBLE);
 			}
 		}
 	}
-	
+
 	// TODO get List Image
 	private void getListImage(String appID) {
 		// get list image

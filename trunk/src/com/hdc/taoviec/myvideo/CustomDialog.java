@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hdc.data.Item;
+import com.hdc.msexy.ListOtherVideo;
 import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.SendSMS;
@@ -131,7 +132,8 @@ public class CustomDialog {
 	}
 
 	public static void transferActivity(Item item, int idx, Context context) {
-		Intent mIntent = new Intent(context, MyOtherVideoActivity.class);
+		//Intent mIntent = new Intent(context, MyOtherVideoActivity.class);
+		Intent mIntent = new Intent(context, ListOtherVideo.class);
 		mIntent.putExtra("id", item.getId());
 		mIntent.putExtra("title", item.getTitle());
 		mIntent.putExtra("download", item.getDownload());
