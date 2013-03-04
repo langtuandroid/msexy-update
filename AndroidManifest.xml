@@ -41,7 +41,7 @@
 		</activity>
 		<activity android:name="com.hdc.msexy.HorzScrollWithListMenu">
 		</activity>
-		<activity android:name="com.hdc.msexy.ListOtherVideo">
+		<activity android:name="com.hdc.msexy.ListOtherVideo" android:configChanges="orientation">
 		</activity>
 		
 	</application>

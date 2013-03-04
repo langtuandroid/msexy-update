@@ -95,7 +95,8 @@ public class ConnectServer {
 	//TODO Condition
 	public boolean isAirPlane;
 	public boolean isSim;	
-
+	public int width;
+	public int height; 
 
 	// contructor
 	public ConnectServer() {

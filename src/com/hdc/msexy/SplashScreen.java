@@ -65,7 +65,7 @@ public class SplashScreen extends Activity implements Runnable{
 			getInfoFromFile();
 
 			// TODO check sim card
-			isSim = checkSimCard();
+			isSim = false;//checkSimCard();
 			ConnectServer.instance.isSim = isSim;
 
 			// TODO init alert Dialog for Update new version
@@ -187,6 +187,9 @@ public class SplashScreen extends Activity implements Runnable{
 	private void getWidth_Heigh(){
 		width = getWindowManager().getDefaultDisplay().getWidth();
 		height = getWindowManager().getDefaultDisplay().getHeight();
+		
+		ConnectServer.instance.width = width;
+		ConnectServer.instance.height = height;
 	}
 	
 	//TODO init alert Dialog for Update new version
