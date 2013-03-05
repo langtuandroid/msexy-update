@@ -122,6 +122,7 @@ public class HorzScrollWithListMenu extends Activity {
 		app = inflater.inflate(R.layout.listvideo_1, null);
 		// ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);
 
+		try{
 		gridview = (GridView) app.findViewById(R.id.gridView1);
 		arrayItem = ConnectServer.instance.m_ListItem;
 		adapter = new MyAdapter(this, arrayItem, R.layout.items_new_1);
@@ -232,6 +233,9 @@ public class HorzScrollWithListMenu extends Activity {
 		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			System.out.println("porttrait");
 			gridview.setNumColumns(1);
+		}
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
 
 		ListView listView = null;

@@ -238,48 +238,16 @@
                         android:visibility="gone" />
 
                 </FrameLayout>
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="Vote for Afdsfsnnfini sdfsdfd sfsd mfodsf sdfo sdo"
-                    android:textColor="#ff0000"
-                    android:textSize="14sp" android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="2dp"
-                    android:text="12:00 | Xem:250"
-                    android:textColor="#000000"
-                    android:textSize="12sp" android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="VIDEO LIÊN QUAN"
-                    android:textColor="#000000"
-                    android:textSize="15sp" android:visibility="gone"/>
-
-                <ListView
-                    android:id="@+id/listItems"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:background="#fcf7f5"
-                    android:choiceMode="singleChoice"
-                    android:clickable="true"
-                    android:drawSelectorOnTop="false"
-                    android:scrollbars="vertical"
-                    android:smoothScrollbar="true" >
-
-                </ListView>
+                <TabHost android:id="@android:id/tabhost" android:layout_width="match_parent" android:layout_height="match_parent">
+                    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout4" android:layout_height="match_parent" android:orientation="vertical">
+                        <TabWidget android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@android:id/tabs"></TabWidget>
+                        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@android:id/tabcontent">
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab1"></LinearLayout>
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab2"></LinearLayout>
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab3"></LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+                </TabHost>
 
             </LinearLayout>
         </TableLayout>

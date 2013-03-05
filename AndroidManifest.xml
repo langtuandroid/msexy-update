@@ -43,6 +43,10 @@
 		</activity>
 		<activity android:name="com.hdc.msexy.ListOtherVideo" android:configChanges="orientation">
 		</activity>
+		<activity android:name="com.hdc.msexy.ListRelatedVideo" android:configChanges="orientation">
+		</activity>
+		<activity android:name="com.hdc.msexy.InfoAcitivity" android:configChanges="orientation">
+		</activity>
 		
 	</application>
 
