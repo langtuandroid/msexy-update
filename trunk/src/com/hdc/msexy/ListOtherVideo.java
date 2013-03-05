@@ -48,6 +48,8 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -161,6 +163,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 	TableLayout table_header;
 	
+	TabHost tabHost;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +222,29 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //			mVideo.setMediaController(mc);						
 			
 			setSizeVideo();
+			
+			tabHost = (TabHost)findViewById(android.R.id.tabhost);
+			tabHost.setup();
+			
+			TabSpec tab1 = tabHost.newTabSpec("Thông tin");			
+			tab1.setContent(new Intent(instance, InfoAcitivity.class));
+			tab1.setIndicator("Thông tin",getResources().getDrawable(R.drawable.combobox));
+			
+			
+			TabSpec tab2 = tabHost.newTabSpec("Video liên quan");
+			tab2.setContent(new Intent(instance, ListRelatedVideo.class));
+			tab2.setIndicator("Video liên quan",getResources().getDrawable(R.drawable.combobox));
+			
+	        TabSpec tabspec3 = tabHost.newTabSpec("tab3");
+	        tabspec3.setContent(R.id.tab3);
+	        tabspec3.setIndicator("Name3");
+
+			
+			tabHost.addTab(tab1);
+			tabHost.addTab(tab2);
+			tabHost.addTab(tabspec3);			
+			
+			//tabHost.setCurrentTab(0);
 			
 			// String uriPath = "android.resource://com.hdc.mycasino/raw/hdc";
 //			Uri uri = Uri.parse(file);
