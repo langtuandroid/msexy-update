@@ -990,5 +990,13 @@ public class ConnectServer {
 			e.printStackTrace();
 		}
 	}
+	//Get item trong mang m_ListItem
+	public Item getItem(String id)
+	{
+		for(int i=0;i<m_ListItem.size();i++)
+			if(m_ListItem.get(i).id.equals(id))
+				return m_ListItem.get(i);
+		return null;
+	}
 
 }

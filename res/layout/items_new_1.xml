@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"    android:layout_height="wrap_content"    android:background="@drawable/item_selector"    android:orientation="horizontal" android:layout_width="fill_parent" android:layout_gravity="center_vertical|center_horizontal">
+<?xml version="1.0" encoding="UTF-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"    android:layout_height="wrap_content"    android:background="@drawable/item_selector"    android:orientation="horizontal" android:layout_width="fill_parent" android:layout_gravity="center_vertical|center_horizontal">
     <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_horizontal" android:layout_width="fill_parent">
         <FrameLayout android:layout_height="wrap_content" android:id="@+id/frameLayout1" android:layout_width="wrap_content">
             <ImageView android:src="@drawable/bg" android:scaleType="fitXY" android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/imageView1"></ImageView>
@@ -7,4 +7,4 @@
             <ImageView android:layout_height="wrap_content" android:layout_width="wrap_content" android:src="@drawable/play_icon" android:layout_gravity="center_vertical|center_horizontal" android:id="@+id/imageView2"></ImageView>
         </FrameLayout>
         <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:id="@+id/txtTitle" android:textColor="#ff0000"></TextView>
-    </LinearLayout></RelativeLayout>
+    </LinearLayout></RelativeLayout>

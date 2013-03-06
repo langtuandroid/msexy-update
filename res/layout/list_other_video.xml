@@ -11,9 +11,10 @@
         android:orientation="vertical" >
 
         <TableLayout
+            android:id="@+id/table_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible" android:id="@+id/table_header">
+            android:visibility="visible" >
 
             <ImageView
                 android:id="@+id/imageView1"
@@ -22,7 +23,6 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/banner"
                 android:visibility="gone" >
-
             </ImageView>
 
             <LinearLayout
@@ -30,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:background="#f35c9f"
-                android:paddingBottom="4dp" android:paddingTop="4dp">
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp" >
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -46,9 +47,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="HOT"
                     android:textColor="#fffcfd"
-                    android:textStyle="bold" android:textSize="16sp" android:gravity="center_vertical|center_horizontal"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -59,7 +62,8 @@
                     android:hint="#fffcfd"
                     android:text="NEW"
                     android:textColor="#fffcfd"
-                    android:textStyle="bold" android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -69,7 +73,8 @@
                     android:gravity="center_horizontal"
                     android:text="TOP"
                     android:textColor="#fffcfd"
-                    android:textStyle="bold" android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -78,9 +83,7 @@
                     android:layout_weight="1"
                     android:fitsSystemWindows="false"
                     android:src="@drawable/icon_search" />
-
             </LinearLayout>
-
         </TableLayout>
 
         <TableLayout
@@ -115,7 +118,6 @@
                         android:padding="8dp"
                         android:text="TextView"
                         android:textColor="#000000" />
-
                 </FrameLayout>
 
                 <LinearLayout
@@ -123,7 +125,6 @@
                     android:layout_height="match_parent"
                     android:focusable="true"
                     android:focusableInTouchMode="true" >
-
                 </LinearLayout>
 
                 <EditText
@@ -143,7 +144,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/search" >
                 </Button>
-
             </LinearLayout>
 
             <LinearLayout
@@ -175,21 +175,18 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.3"
                     android:background="@drawable/search_button" />
-
             </LinearLayout>
-
         </TableLayout>
-
 
         <TableLayout
             android:id="@+id/tableLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="fill_parent" >
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="#fcf7f5"
                 android:orientation="vertical" >
 
@@ -199,8 +196,9 @@
 
                     <VideoView
                         android:id="@+id/videoView1"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="fill_parent" android:layout_height="160dp"/>
+                        android:layout_width="fill_parent"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center_horizontal" />
 
                     <ProgressBar
                         android:id="@+id/progressBar"
@@ -214,20 +212,22 @@
                         android:secondaryProgress="0" />
 
                     <TextView
+                        android:id="@+id/timeElapsed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|left"
                         android:layout_marginBottom="5dp"
                         android:text="00:01"
-                        android:textColor="#000000" android:id="@+id/timeElapsed"/>
+                        android:textColor="#000000" />
 
                     <TextView
+                        android:id="@+id/time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
                         android:layout_marginBottom="5dp"
                         android:text="01:05"
-                        android:textColor="#000000" android:id="@+id/time"/>
+                        android:textColor="#000000" />
 
                     <ImageView
                         android:id="@+id/imageView4"
@@ -236,19 +236,50 @@
                         android:layout_gravity="center"
                         android:src="@drawable/play_icon"
                         android:visibility="gone" />
-
                 </FrameLayout>
-                <TabHost android:id="@android:id/tabhost" android:layout_width="match_parent" android:layout_height="match_parent">
-                    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout4" android:layout_height="match_parent" android:orientation="vertical">
-                        <TabWidget android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@android:id/tabs"></TabWidget>
-                        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@android:id/tabcontent">
-                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab1"></LinearLayout>
-                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab2"></LinearLayout>
-                            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/tab3"></LinearLayout>
-                        </FrameLayout>
-                    </LinearLayout>
-                </TabHost>
 
+                <LinearLayout
+                    android:id="@+id/linear_tabhost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TabHost
+                        android:id="@android:id/tabhost"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical" >
+
+                            <TabWidget
+                                android:id="@android:id/tabs"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" >
+                            </TabWidget>
+
+                            <FrameLayout
+                                android:id="@android:id/tabcontent"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" >
+
+                                <LinearLayout
+                                    android:id="@+id/tab1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/tab2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+                                </LinearLayout>
+                            </FrameLayout>
+                        </LinearLayout>
+                    </TabHost>
+                </LinearLayout>
             </LinearLayout>
         </TableLayout>
     </LinearLayout>

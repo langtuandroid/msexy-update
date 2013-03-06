@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +19,6 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
-import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -37,8 +37,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,23 +45,21 @@ import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hdc.data.Item;
-import com.hdc.msexy.R;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.view.ListRecordAdapter;
 
 
-public class ListOtherVideo extends Activity implements OnClickListener, Runnable,
-		OnErrorListener, OnPreparedListener {
+public class ListOtherVideo extends TabActivity implements OnClickListener, Runnable,
+		OnErrorListener, OnPreparedListener{
 	// init variable
 	private static ArrayList<Item> arrayitems = new ArrayList<Item>();
 	private static ListRecordAdapter listrecordarray;
@@ -164,7 +160,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	TableLayout table_header;
 	
 	TabHost tabHost;
-	
+	LinearLayout layout_tab;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -213,7 +209,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			// END
 			
 			table_header = (TableLayout)findViewById(R.id.table_header);
-
+			layout_tab = (LinearLayout)findViewById(R.id.linear_tabhost);
 			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //			mc = new MediaController(this);
 //			mVideo = (VideoView) findViewById(R.id.videoView1);
@@ -224,27 +220,29 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			setSizeVideo();
 			
 			tabHost = (TabHost)findViewById(android.R.id.tabhost);
-			tabHost.setup();
+			tabHost.setup();			
+			TabSpec tab1 = tabHost.newTabSpec("Thông tin");						
+			Intent intent1=new Intent(instance, InfoAcitivity.class);
+			intent1.putExtra("id",b.getString("id"));
+			tab1.setContent(intent1);
 			
-			TabSpec tab1 = tabHost.newTabSpec("Thông tin");			
-			tab1.setContent(new Intent(instance, InfoAcitivity.class));
-			tab1.setIndicator("Thông tin",getResources().getDrawable(R.drawable.combobox));
+			tab1.setIndicator("Thông tin",getResources().getDrawable(R.drawable.info_icon));
 			
 			
-			TabSpec tab2 = tabHost.newTabSpec("Video liên quan");
-			tab2.setContent(new Intent(instance, ListRelatedVideo.class));
-			tab2.setIndicator("Video liên quan",getResources().getDrawable(R.drawable.combobox));
-			
-	        TabSpec tabspec3 = tabHost.newTabSpec("tab3");
-	        tabspec3.setContent(R.id.tab3);
-	        tabspec3.setIndicator("Name3");
+			TabSpec tab2 = tabHost.newTabSpec("Video liên quan");			
+			Intent intent2=new Intent(instance, ListRelatedVideo.class);
+			intent2.putExtra("id",b.getString("id"));
+			tab2.setContent(intent2);
+			tab2.setIndicator("Video liên quan",getResources().getDrawable(R.drawable.related_icon));
 
 			
 			tabHost.addTab(tab1);
-			tabHost.addTab(tab2);
-			tabHost.addTab(tabspec3);			
-			
-			//tabHost.setCurrentTab(0);
+			tabHost.addTab(tab2);					
+			TabWidget tabWidget = tabHost.getTabWidget();
+
+			for(int i=0; i<tabWidget.getChildCount(); i++)
+			  tabWidget.getChildAt(i).setBackgroundResource(R.drawable.tab_background);
+			tabHost.setCurrentTab(0);
 			
 			// String uriPath = "android.resource://com.hdc.mycasino/raw/hdc";
 //			Uri uri = Uri.parse(file);
@@ -345,7 +343,11 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub		
 		setSizeVideo();
-		
+		int display_mode = getResources().getConfiguration().orientation;
+		if (display_mode == 1) {
+		} else {
+			layout_tab.setVisibility(View.GONE);
+		}   		
 		super.onConfigurationChanged(newConfig);
 	}
 	
