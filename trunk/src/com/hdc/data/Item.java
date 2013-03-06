@@ -82,6 +82,9 @@ public class Item {
 
 	public void setTitle(String title) {
 		this.title = title;
+		
+		if(this.title.length() > 20)
+			this.title = title.substring(0, 20) + " ...";		
 	}
 
 	public String getInfo() {

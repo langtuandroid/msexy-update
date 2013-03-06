@@ -21,6 +21,8 @@
  */
 package com.hdc.taoviec.myvideo;
 
+import com.hdc.msexy.HorzScrollWithListMenu;
+
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
+import android.widget.Toast;
 
 /**
  * A HorizontalScrollView (HSV) implementation that disallows touch events (so no scrolling can be done by the user).
@@ -70,10 +73,16 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
         // A ViewGroup MUST be the only child of the HSV
         ViewGroup parent = (ViewGroup) getChildAt(0);
 
+        parent.removeAllViews();
+        
         // Add all the children, but add them invisible so that the layouts are calculated, but you can't see the Views
         for (int i = 0; i < children.length; i++) {
-            children[i].setVisibility(View.INVISIBLE);
-            parent.addView(children[i]);
+        	try{
+                children[i].setVisibility(View.INVISIBLE);               
+                parent.addView(children[i]);        		
+        	}catch(Exception ex){
+        		ex.printStackTrace();
+        	}
         }
 
         // Add a layout listener to this HSV
@@ -126,6 +135,8 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
         public void onGlobalLayout() {
             // System.out.println("onGlobalLayout");
 
+        	//Toast.makeText(HorzScrollWithListMenu.instance, "onGlobalLayout size " ,Toast.LENGTH_SHORT ).show();
+        	
             final HorizontalScrollView me = MyHorizontalScrollView.this;
 
             // The listener will remove itself as a layout listener to the HSV
@@ -147,7 +158,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView {
             scrollToViewPos = 0;
             for (int i = 0; i < children.length; i++) {
                 sizeCallback.getViewSize(i, w, h, dims);
-                // System.out.println("addView w=" + dims[0] + ", h=" + dims[1]);
+
                 children[i].setVisibility(View.VISIBLE);
                 parent.addView(children[i], dims[0], dims[1]);
                 if (i < scrollToViewIdx) {

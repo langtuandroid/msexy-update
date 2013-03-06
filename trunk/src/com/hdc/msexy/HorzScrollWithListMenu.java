@@ -103,165 +103,171 @@ public class HorzScrollWithListMenu extends Activity {
 	private Button m_BtNext;
 	// TODO flag Pagging
 	private static int flag_FocusPage = 1;
+	ListView listview;
+
+	int count = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		LayoutInflater inflater = LayoutInflater.from(this);
-		scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu,
-				null);
+		scrollView = (MyHorizontalScrollView) inflater.inflate(
+				R.layout.horz_scroll_with_list_menu, null);
 		setContentView(scrollView);
 
 		instance = this;
 
-		// getWidth_Heigh();
-
 		menu = inflater.inflate(R.layout.horz_scroll_menu, null);
-		// app = inflater.inflate(R.layout.horz_scroll_app, null);
 		app = inflater.inflate(R.layout.listvideo_1, null);
-		// ViewGroup tabBar = (ViewGroup) app.findViewById(R.id.tabBar);
 
-		try{
-		gridview = (GridView) app.findViewById(R.id.gridView1);
-		arrayItem = ConnectServer.instance.m_ListItem;
-		adapter = new MyAdapter(this, arrayItem, R.layout.items_new_1);
-		gridview.setAdapter(adapter);
-		gridview.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-				// TODO Auto-generated method stub
-				if(ConnectServer.instance.isAirPlane){
-					Toast.makeText(
-							instance,
-							"Máy bạn đang để chế độ máy bay \n nên không xem được video",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				// // TODO Còn sử dụng
-				if (!ConnectServer.instance.isSim) {
-					if (ConnectServer.instance.m_Active.status.trim().equals("1")) {
-						CustomDialog.transferActivity(arrayItem.get(pos), 0, instance);
-					} else if (ConnectServer.instance.m_Active.status.trim().equals("0")) {
-						if (ConnectServer.instance.isFirstTime.equals("begin")
-								&& ConnectServer.instance.m_Active.msg.trim().equals("1")) {
-//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
-//									instance,false);
+		try {
+			if (count == 0) {
+				gridview = (GridView) app.findViewById(R.id.gridView1);
+				arrayItem = ConnectServer.instance.m_ListItem;
+				adapter = new MyAdapter(this, arrayItem, R.layout.items_new_1);
+				gridview.setAdapter(adapter);
+				gridview.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long arg3) {
+						// TODO Auto-generated method stub
+						if (ConnectServer.instance.isAirPlane) {
+							Toast.makeText(
+									instance,
+									"Máy bạn đang để chế độ máy bay \n nên không xem được video",
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+
+						// // TODO Còn sử dụng
+						if (!ConnectServer.instance.isSim) {
+							if (ConnectServer.instance.m_Active.status.trim()
+									.equals("1")) {
+								CustomDialog.transferActivity(
+										arrayItem.get(pos), 0, instance);
+							} else if (ConnectServer.instance.m_Active.status
+									.trim().equals("0")) {
+								if (ConnectServer.instance.isFirstTime
+										.equals("begin")
+										&& ConnectServer.instance.m_Active.msg
+												.trim().equals("1")) {
+									// CustomDialog.showDialog_ActivationSMS(arrayitems.get(position),
+									// m_idx,
+									// instance,false);
+								} else {
+
+									// CustomDialog.showDialog_ActivationSMS(arrayitems.get(position),
+									// m_idx,
+									// instance,true);
+								}
+							}
 						} else {
-							
-//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
-//									instance,true);													
+							Toast.makeText(
+									instance,
+									"Bạn đã không có Sim điện thoại.\n Bạn không thể kích hoạt và sử dụng App được !!!",
+									Toast.LENGTH_LONG).show();
 						}
 					}
-				} else {
-					Toast.makeText(
-							instance,
-							"Bạn đã không có Sim điện thoại.\n Bạn không thể kích hoạt và sử dụng App được !!!",
-							Toast.LENGTH_LONG).show();
-				}
+				});
+
+				layout_search = (LinearLayout) app
+						.findViewById(R.id.layout_search);
+				imgSearch = (ImageView) app.findViewById(R.id.imageView3);
+				imgSearch.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						if (!flag_Visile_Search)
+							layout_search.setVisibility(View.VISIBLE);
+						else
+							layout_search.setVisibility(View.GONE);
+						flag_Visile_Search = !flag_Visile_Search;
+					}
+				});
+
+				// search
+				txt_search = (EditText) app.findViewById(R.id.txt_search);
+				txt_search
+						.setOnEditorActionListener(new OnEditorActionListener() {
+
+							@Override
+							public boolean onEditorAction(TextView v,
+									int actionId, KeyEvent event) {
+								// TODO Auto-generated method stub
+								if (m_keyword.equals("")) {
+									new UpdateListView().execute("", txt_search
+											.getText().toString());
+								} else {
+									new UpdateListView().execute("", m_keyword);
+								}
+
+								return false;
+							}
+						});
+				bt_search = (Button) app.findViewById(R.id.bt_search_1);
+				bt_search.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						if (!txt_search.getText().toString().equals("")) {
+							new UpdateListView().execute("", txt_search
+									.getText().toString());
+						} else {
+							Toast.makeText(
+									HorzScrollWithListMenu.this,
+									"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
+									Toast.LENGTH_LONG).show();
+						}
+					}
+				});
+
+				// HOT - NEW - TOP
+				txt_hot = (TextView) app.findViewById(R.id.txt_hot);
+				CustomFontsLoader.setFont(txt_hot, 0, instance);
+				CustomFontsLoader.setUnderline(txt_hot);
+				txt_new = (TextView) app.findViewById(R.id.txt_new);
+				CustomFontsLoader.setFont(txt_new, 0, instance);
+				txt_top = (TextView) app.findViewById(R.id.txt_top);
+				CustomFontsLoader.setFont(txt_top, 0, instance);
+
+				// TODO page
+				createFooter(app);
 				
+				count++;
+				
+				listview = (ListView) menu.findViewById(R.id.list);
+				ViewUtils.initListView(this, listview,
+						android.R.layout.simple_list_item_1);
+
+				btnSlide = (ImageView) app.findViewById(R.id.imageView2);
+
+				clickListener = new ClickListenerForScrolling(scrollView, menu);
+				btnSlide.setOnClickListener(clickListener);
+
 
 			}
-		});
-		
-		
-		// gridview.setNumColumns(1);
 
-		layout_search = (LinearLayout) app.findViewById(R.id.layout_search);
-		imgSearch = (ImageView) app.findViewById(R.id.imageView3);
-		imgSearch.setOnClickListener(new OnClickListener() {
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				System.out.println("Landscape");
+				gridview.setNumColumns(2);
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (!flag_Visile_Search)
-					layout_search.setVisibility(View.VISIBLE);
-				else
-					layout_search.setVisibility(View.GONE);
-				flag_Visile_Search = !flag_Visile_Search;
+			} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				System.out.println("porttrait");
+				gridview.setNumColumns(1);
 			}
-		});
-
-		// search
-		txt_search = (EditText) app.findViewById(R.id.txt_search);
-		txt_search.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				// TODO Auto-generated method stub
-				if (m_keyword.equals("")) {
-					new UpdateListView().execute("", txt_search.getText().toString());
-				} else {
-					new UpdateListView().execute("", m_keyword);
-				}
-
-				return false;
-			}
-		});
-		bt_search = (Button) app.findViewById(R.id.bt_search_1);
-		bt_search.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (!txt_search.getText().toString().equals("")) {
-					new UpdateListView().execute("", txt_search.getText().toString());
-				} else {
-					Toast.makeText(HorzScrollWithListMenu.this,
-							"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm", Toast.LENGTH_LONG).show();
-				}
-			}
-		});
-
-		// HOT - NEW - TOP
-		txt_hot = (TextView) app.findViewById(R.id.txt_hot);
-		CustomFontsLoader.setFont(txt_hot, 0, instance);
-		CustomFontsLoader.setUnderline(txt_hot);
-		txt_new = (TextView) app.findViewById(R.id.txt_new);
-		CustomFontsLoader.setFont(txt_new, 0, instance);
-		txt_top = (TextView) app.findViewById(R.id.txt_top);
-		CustomFontsLoader.setFont(txt_top, 0, instance);
-
-		// TODO page
-		createFooter(app);
-
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			System.out.println("Landscape");
-			gridview.setNumColumns(2);
-
-		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			System.out.println("porttrait");
-			gridview.setNumColumns(1);
-		}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-		ListView listView = null;
-		// ListView listView = (ListView) app.findViewById(R.id.list);
-		// ViewUtils.initListView(this, listView, "Item ", 30,
-		// android.R.layout.simple_list_item_1);
-
-		listView = (ListView) menu.findViewById(R.id.list);
-		// ViewUtils.initListView(this, listView, "Menu ", 30,
-		// android.R.layout.simple_list_item_1);
-		ViewUtils.initListView(this, listView, android.R.layout.simple_list_item_1);
-
-		// btnSlide = (ImageView) tabBar.findViewById(R.id.BtnSlide);
-		btnSlide = (ImageView) app.findViewById(R.id.imageView2);
-		// btnWidth = /*btnSlide.getMeasuredWidth()*/50;
-
-		clickListener = new ClickListenerForScrolling(scrollView, menu);
-		btnSlide.setOnClickListener(clickListener);
-
-		// menuWidth = width - btnWidth;
 
 		final View[] children = new View[] { menu, app };
 
 		// Scroll to app (view[1]) when layout finished.
 		int scrollToViewIdx = 1;
-		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
+		scrollView.initViews(children, scrollToViewIdx,
+				new SizeCallbackForMenu(btnSlide));
 	}
 
 	class UpdatePage extends AsyncTask<Void, Void, Void> {
@@ -315,7 +321,8 @@ public class HorzScrollWithListMenu extends Activity {
 			// m_dialog.dismiss();
 
 			arrayItem = ConnectServer.instance.m_ListItem;
-			adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem, R.layout.items_new_1);
+			adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
+					R.layout.items_new_1);
 			gridview.setAdapter(adapter);
 
 			customDialog.dismiss();
@@ -329,13 +336,14 @@ public class HorzScrollWithListMenu extends Activity {
 
 	// TODO create footer for listview (pagging)
 	private void createFooter(View v) {
-		//TODO get promotion
+		// TODO get promotion
 		ConnectServer.instance.getPromotion();
-		
-		//ConnectServer.instance.pageCurrent = 1;
 
-//		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		View v = (View) inflater.inflate(R.layout.page, null, false);
+		// ConnectServer.instance.pageCurrent = 1;
+
+		// LayoutInflater inflater = (LayoutInflater)
+		// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// View v = (View) inflater.inflate(R.layout.page, null, false);
 
 		// TODO button
 		m_BtPrevious = (Button) v.findViewById(R.id.page_previous);
@@ -345,23 +353,22 @@ public class HorzScrollWithListMenu extends Activity {
 		m_BtNext = (Button) v.findViewById(R.id.page_next);
 		promotion = (ImageView) v.findViewById(R.id.promotion);
 
-		
-		if(flag_FocusPage == 1){
-			m_BtPage_1.setText(ConnectServer.instance.pageCurrent+"");
-			m_BtPage_2.setText((ConnectServer.instance.pageCurrent+1)+"");
-			m_BtPage_3.setText((ConnectServer.instance.pageCurrent +2)+"");
-			
+		if (flag_FocusPage == 1) {
+			m_BtPage_1.setText(ConnectServer.instance.pageCurrent + "");
+			m_BtPage_2.setText((ConnectServer.instance.pageCurrent + 1) + "");
+			m_BtPage_3.setText((ConnectServer.instance.pageCurrent + 2) + "");
+
 			CustomFontsLoader.setUnderline(m_BtPage_1);
-		}else if(flag_FocusPage == 2){
+		} else if (flag_FocusPage == 2) {
 			CustomFontsLoader.setUnderline(m_BtPage_2);
-		}else{
+		} else {
 			CustomFontsLoader.setUnderline(m_BtPage_3);
 		}
-						
-		
+
 		if (ConnectServer.instance.m_Promotion.getImg() != null) {
 			promotion.setVisibility(ImageView.VISIBLE);
-			promotion.setImageBitmap(ConnectServer.instance.m_Promotion.getImg());
+			promotion.setImageBitmap(ConnectServer.instance.m_Promotion
+					.getImg());
 		}
 
 		promotion.setOnClickListener(new OnClickListener() {
@@ -370,11 +377,12 @@ public class HorzScrollWithListMenu extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				try {
-					//TODO get promotion
+					// TODO get promotion
 					ConnectServer.instance.getPromotion();
 
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri
-							.parse(ConnectServer.instance.m_Promotion.getLink()));
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+							Uri.parse(ConnectServer.instance.m_Promotion
+									.getLink()));
 					startActivity(browserIntent);
 
 				} catch (Exception e) {
@@ -383,7 +391,7 @@ public class HorzScrollWithListMenu extends Activity {
 			}
 		});
 
-		//t = (TextView) v.findViewById(R.id.txtDot);
+		// t = (TextView) v.findViewById(R.id.txtDot);
 
 		// TODO set onclick for button
 		m_BtPrevious.setOnClickListener(new OnClickListener() {
@@ -399,7 +407,7 @@ public class HorzScrollWithListMenu extends Activity {
 					m_BtPage_1.setText((pageCurrent - 3) + "");
 					m_BtPage_2.setText((pageCurrent - 2) + "");
 					m_BtPage_3.setText((pageCurrent - 1) + "");
-					
+
 					CustomFontsLoader.setUnderline(m_BtPage_3);
 					break;
 				case 2:
@@ -438,18 +446,18 @@ public class HorzScrollWithListMenu extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-//				m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
-//				m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
-//				m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
+				// m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
 				// set page current
-				ConnectServer.instance.pageCurrent = Integer.parseInt(m_BtPage_1.getText()
-						.toString());
+				ConnectServer.instance.pageCurrent = Integer
+						.parseInt(m_BtPage_1.getText().toString());
 				flag_FocusPage = 1;
 				if (ConnectServer.instance.pageCurrent != 1)
 					m_BtPrevious.setVisibility(Button.VISIBLE);
 				else
 					m_BtPrevious.setVisibility(Button.GONE);
-				
+
 				m_BtPage_1.setText(m_BtPage_1.getText().toString());
 				m_BtPage_2.setText(m_BtPage_2.getText().toString());
 				m_BtPage_3.setText(m_BtPage_3.getText().toString());
@@ -464,17 +472,17 @@ public class HorzScrollWithListMenu extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-//				m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
-//				m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
-//				m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
+				// m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
 
 				// set page current
-				ConnectServer.instance.pageCurrent = Integer.parseInt(m_BtPage_2.getText()
-						.toString());
+				ConnectServer.instance.pageCurrent = Integer
+						.parseInt(m_BtPage_2.getText().toString());
 
 				flag_FocusPage = 2;
 				m_BtPrevious.setVisibility(Button.VISIBLE);
-				
+
 				m_BtPage_1.setText(m_BtPage_1.getText().toString());
 				m_BtPage_2.setText(m_BtPage_2.getText().toString());
 				m_BtPage_3.setText(m_BtPage_3.getText().toString());
@@ -490,22 +498,21 @@ public class HorzScrollWithListMenu extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-//				m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
-//				m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
-//				m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_3.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_15));
+				// m_BtPage_2.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
+				// m_BtPage_1.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_13));
 
 				// set page current
-				ConnectServer.instance.pageCurrent = Integer.parseInt(m_BtPage_3.getText()
-						.toString());
+				ConnectServer.instance.pageCurrent = Integer
+						.parseInt(m_BtPage_3.getText().toString());
 
 				flag_FocusPage = 3;
 				m_BtPrevious.setVisibility(Button.VISIBLE);
-				
+
 				m_BtPage_1.setText(m_BtPage_1.getText().toString());
 				m_BtPage_2.setText(m_BtPage_2.getText().toString());
 				m_BtPage_3.setText(m_BtPage_3.getText().toString());
 
-				
 				CustomFontsLoader.setUnderline(m_BtPage_3);
 
 				new UpdatePage().execute();
@@ -520,27 +527,27 @@ public class HorzScrollWithListMenu extends Activity {
 				// TODO Auto-generated method stub
 				switch (flag_FocusPage) {
 				case 1:
-//					m_BtPage_2.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_15));
-//					m_BtPage_1.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
-//					m_BtPage_3.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
+					// m_BtPage_2.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_15));
+					// m_BtPage_1.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
+					// m_BtPage_3.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
 					flag_FocusPage = 2;
-					
+
 					m_BtPage_1.setText(m_BtPage_1.getText().toString());
 					m_BtPage_2.setText(m_BtPage_2.getText().toString());
 					m_BtPage_3.setText(m_BtPage_3.getText().toString());
-					
+
 					CustomFontsLoader.setUnderline(m_BtPage_2);
 					break;
 				case 2:
-//					m_BtPage_3.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_15));
-//					m_BtPage_2.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
-//					m_BtPage_1.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
+					// m_BtPage_3.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_15));
+					// m_BtPage_2.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
+					// m_BtPage_1.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
 					flag_FocusPage = 3;
 
 					m_BtPage_1.setText(m_BtPage_1.getText().toString());
@@ -550,12 +557,12 @@ public class HorzScrollWithListMenu extends Activity {
 					CustomFontsLoader.setUnderline(m_BtPage_3);
 					break;
 				case 3:
-//					m_BtPage_1.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_15));
-//					m_BtPage_2.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
-//					m_BtPage_3.setBackgroundDrawable(getResources()
-//							.getDrawable(R.drawable.title_13));
+					// m_BtPage_1.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_15));
+					// m_BtPage_2.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
+					// m_BtPage_3.setBackgroundDrawable(getResources()
+					// .getDrawable(R.drawable.title_13));
 					flag_FocusPage = 1;
 					// set text 3 pages
 					int pageCurrent = ConnectServer.instance.pageCurrent;
@@ -573,17 +580,17 @@ public class HorzScrollWithListMenu extends Activity {
 				if (totalPage - pageCurrent <= 3) {
 					// tắt nút "tiếp"
 					m_BtNext.setVisibility(Button.GONE);
-					//t.setVisibility(TextView.GONE);
+					// t.setVisibility(TextView.GONE);
 				}
 				if (totalPage - pageCurrent == 2) {
 					// tắt nút page 3
 					m_BtPage_3.setVisibility(Button.GONE);
-					//t.setVisibility(TextView.GONE);
+					// t.setVisibility(TextView.GONE);
 				}
 				if (totalPage - pageCurrent == 1) {
 					// tắt nút page 2
 					m_BtPage_2.setVisibility(Button.GONE);
-					//t.setVisibility(TextView.GONE);
+					// t.setVisibility(TextView.GONE);
 				}
 
 				// set page current
@@ -595,31 +602,54 @@ public class HorzScrollWithListMenu extends Activity {
 			}
 		});
 
-		//return v;
+		// return v;
 	}
 
-	// @Override
-	// public void onConfigurationChanged(Configuration newConfig) {
-	// // TODO Auto-generated method stub
-	// if (getResources().getConfiguration().orientation ==
-	// Configuration.ORIENTATION_LANDSCAPE) {
-	// System.out.println("Landscape");
-	// menuWidth = height - btnWidth;
-	// } else if (getResources().getConfiguration().orientation ==
-	// Configuration.ORIENTATION_PORTRAIT) {
-	// System.out.println("porttrait");
-	// menuWidth = width - btnWidth;
-	// }
-	//
-	//
-	// super.onConfigurationChanged(newConfig);
-	// }
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			// System.out.println("Landscape");
+			// menuWidth = height - btnWidth;
+			gridview.setNumColumns(2);
+
+			// clickListener = new ClickListenerForScrolling(scrollView, menu);
+			// btnSlide.setOnClickListener(clickListener);
+
+			// final View[] children = new View[] { menu, app };
+
+			// Scroll to app (view[1]) when layout finished.
+			// int scrollToViewIdx = 1;
+			// scrollView.initViews(children, scrollToViewIdx, new
+			// SizeCallbackForMenu(btnSlide));
+
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			// System.out.println("porttrait");
+			// menuWidth = width - btnWidth;
+			gridview.setNumColumns(1);
+
+			// clickListener = new ClickListenerForScrolling(scrollView, menu);
+			// btnSlide.setOnClickListener(clickListener);
+
+			// final View[] children = new View[] { menu, app };
+
+			// Scroll to app (view[1]) when layout finished.
+			// int scrollToViewIdx = 1;
+			// scrollView.initViews(children, scrollToViewIdx, new
+			// SizeCallbackForMenu(btnSlide));
+
+		}
+
+		super.onConfigurationChanged(newConfig);
+	}
 
 	public void select_Menu_Item(int position) {
 
 		clickListener.onClick(null);
 
-		ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(position).getCatId() + "";
+		ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(
+				position).getCatId()
+				+ "";
 		new UpdateListView().execute(ConnectServer.catID + "", "");
 	}
 
@@ -635,7 +665,8 @@ public class HorzScrollWithListMenu extends Activity {
 		 */
 		boolean menuOut = false;
 
-		public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
+		public ClickListenerForScrolling(HorizontalScrollView scrollView,
+				View menu) {
 			super();
 			this.scrollView = scrollView;
 			this.menu = menu;
@@ -677,12 +708,16 @@ public class HorzScrollWithListMenu extends Activity {
 		public SizeCallbackForMenu(View btnSlide) {
 			super();
 			this.btnSlide = btnSlide;
+
 		}
 
 		@Override
 		public void onGlobalLayout() {
 			btnWidth = btnSlide.getMeasuredWidth();
 			System.out.println("btnWidth=" + btnWidth);
+
+//			Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
+//					Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -692,6 +727,11 @@ public class HorzScrollWithListMenu extends Activity {
 			final int menuIdx = 0;
 			if (idx == menuIdx) {
 				dims[0] = w - 2 * btnWidth;
+
+//				Toast.makeText(instance, "getViewSize size " + this.btnWidth,
+//						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
+//						Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -726,7 +766,8 @@ public class HorzScrollWithListMenu extends Activity {
 			if (catId[1].equals("begin")) {
 				getListImage(catId[0]);
 			} else {
-				ConnectServer.instance.searchVideo(catId[0] + "", catId[1] + "");
+				ConnectServer.instance
+						.searchVideo(catId[0] + "", catId[1] + "");
 				arrayItem = ConnectServer.instance.m_ListItem;
 			}
 
@@ -764,8 +805,8 @@ public class HorzScrollWithListMenu extends Activity {
 				// updateListView();
 				ConnectServer.instance.flagSearch = true;
 				customDialog.dismiss();
-				Toast.makeText(HorzScrollWithListMenu.this, "Không tìm thấy dữ liệu !!!",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(HorzScrollWithListMenu.this,
+						"Không tìm thấy dữ liệu !!!", Toast.LENGTH_LONG).show();
 				// v.setVisibility(View.VISIBLE);
 			}
 		}

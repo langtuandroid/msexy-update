@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,9 +44,6 @@ import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +54,7 @@ import com.hdc.ultilities.ConnectServer;
 import com.hdc.view.ListRecordAdapter;
 
 
-public class ListOtherVideo extends TabActivity implements OnClickListener, Runnable,
+public class ListOtherVideo extends Activity implements OnClickListener, Runnable,
 		OnErrorListener, OnPreparedListener{
 	// init variable
 	private static ArrayList<Item> arrayitems = new ArrayList<Item>();
@@ -159,8 +155,7 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 
 	TableLayout table_header;
 	
-	TabHost tabHost;
-	LinearLayout layout_tab;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -170,11 +165,10 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			setContentView(R.layout.list_other_video);
+			setContentView(R.layout.list_other_video_1);
 			
-
 			instance = this;
-
+			
 			Bundle b = this.getIntent().getExtras();
 			ConnectServer.instance.getOtherListVideo(b.getString("id"));
 			title = b.getString("title");
@@ -185,6 +179,8 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 //			TableLayout view = (TableLayout) findViewById(R.id.layout_video);
 //			view.setVisibility(TableLayout.VISIBLE);
 
+			table_header = (TableLayout)findViewById(R.id.table_header);
+			
 			// TODO VIDEO
 			/* variables init */
 //			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -206,117 +202,8 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 
 			initMedia();
 			//playMedia(null);
-			// END
-			
-			table_header = (TableLayout)findViewById(R.id.table_header);
-			layout_tab = (LinearLayout)findViewById(R.id.linear_tabhost);
-			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			mc = new MediaController(this);
-//			mVideo = (VideoView) findViewById(R.id.videoView1);
-//			mVideo.setMediaController(mc);
-//			mc.setAnchorView(mVideo);
-//			mVideo.setMediaController(mc);						
-			
+			// END						
 			setSizeVideo();
-			
-			tabHost = (TabHost)findViewById(android.R.id.tabhost);
-			tabHost.setup();			
-			TabSpec tab1 = tabHost.newTabSpec("Thông tin");						
-			Intent intent1=new Intent(instance, InfoAcitivity.class);
-			intent1.putExtra("id",b.getString("id"));
-			tab1.setContent(intent1);
-			
-			tab1.setIndicator("Thông tin",getResources().getDrawable(R.drawable.info_icon));
-			
-			
-			TabSpec tab2 = tabHost.newTabSpec("Video liên quan");			
-			Intent intent2=new Intent(instance, ListRelatedVideo.class);
-			intent2.putExtra("id",b.getString("id"));
-			tab2.setContent(intent2);
-			tab2.setIndicator("Video liên quan",getResources().getDrawable(R.drawable.related_icon));
-
-			
-			tabHost.addTab(tab1);
-			tabHost.addTab(tab2);					
-			TabWidget tabWidget = tabHost.getTabWidget();
-
-			for(int i=0; i<tabWidget.getChildCount(); i++)
-			  tabWidget.getChildAt(i).setBackgroundResource(R.drawable.tab_background);
-			tabHost.setCurrentTab(0);
-			
-			// String uriPath = "android.resource://com.hdc.mycasino/raw/hdc";
-//			Uri uri = Uri.parse(file);
-//			mVideo.setVideoURI(uri);
-//			mVideo.requestFocus();
-//			mVideo.start();
-
-			
-//			// TODO init button search
-//			initButton_Search();
-//			
-//			// TODO init edittext
-//			initEditText();
-//			
-//			// TODO init spinner
-//			initSpinner();
-//
-//			// init list item
-//			initListView();
-
-			// init alertdialog "Success - Failed"
-			// initAlertDialog_Success_Fail();
-
-			
-//			addContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-//					ViewGroup.LayoutParams.FILL_PARENT));
-//			LinearLayout scrollView = (LinearLayout)findViewById(R.id.scrollview);
-//			int count = ConnectServer.instance.m_OtherListItem.size();
-//			View[] mView = new View[count];
-//			for(c = 0;c < count;c++){
-//				LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//				View v = inflater.inflate(R.layout.items_new, null, false);
-//				mView[c] = v;
-//				scrollView.addView(mView[c]);
-//				final Item item = ConnectServer.instance.m_OtherListItem.get(c);
-//				mView[c].setOnClickListener(new OnClickListener() {
-//					
-//					@Override
-//					public void onClick(View v) {
-//						// TODO Auto-generated method stub
-//						Intent mIntent = new Intent(instance, MyOtherVideoActivity_1.class);
-//						mIntent.putExtra("id", item.getId());
-//						mIntent.putExtra("title", item.getTitle());
-//						mIntent.putExtra("download", item.getDownload());
-//						mIntent.putExtra("file", item.getFile());
-//						mIntent.putExtra("src", item.getSrc());
-//						instance.startActivity(mIntent);						
-//					}
-//				});
-//				TextView title = (TextView) v.findViewById(R.id.txtTitle);
-//				TextView date = (TextView) v.findViewById(R.id.txtDateTime);
-//				ImageView image = (ImageView) v.findViewById(R.id.imageView1);
-//
-//				if (title != null) {
-//					title.setText(item.getTitle());
-//				}
-//				if (date != null) {
-//					date.setText("View : " + item.getDownload());
-//				}
-//				if (image != null && item.getImg()!=null) {
-//					try {					
-//						image.setImageBitmap(item.getImg());
-//					} catch (Exception e) {
-//					}
-//				}else{
-//					image.setImageDrawable(getResources().getDrawable(R.drawable.bg));
-//				}
-//
-//			}
-			
-			
-			
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -325,13 +212,13 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 	private void setSizeVideo(){
 		LayoutParams params = vv.getLayoutParams();		
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			table_header.setVisibility(View.GONE);
 			params.width = ConnectServer.instance.height;
 			params.height = ConnectServer.instance.width;
 
 		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			table_header.setVisibility(View.VISIBLE);
 			params.width = ConnectServer.instance.width;
 			params.height = ConnectServer.instance.height/2;
@@ -343,11 +230,6 @@ public class ListOtherVideo extends TabActivity implements OnClickListener, Runn
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub		
 		setSizeVideo();
-		int display_mode = getResources().getConfiguration().orientation;
-		if (display_mode == 1) {
-		} else {
-			layout_tab.setVisibility(View.GONE);
-		}   		
 		super.onConfigurationChanged(newConfig);
 	}
 	
