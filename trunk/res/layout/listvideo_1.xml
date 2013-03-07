@@ -186,11 +186,10 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:horizontalSpacing="10dp"
                     android:numColumns="auto_fit"
                     android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp" >
+                    android:stretchMode="columnWidth" >
+
                 </GridView>
 
                 <LinearLayout

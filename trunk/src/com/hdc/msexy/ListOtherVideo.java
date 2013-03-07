@@ -38,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -50,7 +51,13 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hdc.data.Item;
+import com.hdc.msexy.HorzScrollWithListMenu.ClickListenerForScrolling;
+import com.hdc.msexy.HorzScrollWithListMenu.SizeCallbackForMenu;
+import com.hdc.taoviec.myvideo.MyHorizontalScrollView;
+import com.hdc.taoviec.myvideo.ViewUtils;
+import com.hdc.taoviec.myvideo.MyHorizontalScrollView.SizeCallback;
 import com.hdc.ultilities.ConnectServer;
+import com.hdc.ultilities.CustomFontsLoader;
 import com.hdc.view.ListRecordAdapter;
 
 
@@ -78,6 +85,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	String download;
 	String file;
 	String src;
+	String duration;
 
 	// VIDEO
 	/**
@@ -155,6 +163,21 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 	TableLayout table_header;
 	
+	MyHorizontalScrollView scrollView;
+	View menu;
+	View app;
+	ImageView btnSlide;
+	boolean menuOut = false;
+	Handler handler = new Handler();
+	int btnWidth;
+	int width, height;
+	ListView listview;
+	ClickListenerForScrolling clickListener;
+	
+	TextView txt_hot;
+	TextView txt_new;
+	TextView txt_top;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +198,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			download = b.getString("download");
 			file = b.getString("file");
 			src = b.getString("src");
-
+			duration = b.getString("duration");
+			
 //			TableLayout view = (TableLayout) findViewById(R.id.layout_video);
 //			view.setVisibility(TableLayout.VISIBLE);
 
@@ -200,14 +224,29 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //
 			readyToPlay = false;
 
+			// HOT - NEW - TOP
+			txt_hot = (TextView) findViewById(R.id.txt_hot);
+			CustomFontsLoader.setFont(txt_hot, 0, instance);
+			CustomFontsLoader.setUnderline(txt_hot);
+			txt_new = (TextView) findViewById(R.id.txt_new);
+			CustomFontsLoader.setFont(txt_new, 0, instance);
+			txt_top = (TextView) findViewById(R.id.txt_top);
+			CustomFontsLoader.setFont(txt_top, 0, instance);
+
+			
 			initMedia();
 			//playMedia(null);
 			// END						
 			setSizeVideo();
+			
+			initListView();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	private void setSizeVideo(){
 		LayoutParams params = vv.getLayoutParams();		
@@ -225,6 +264,105 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		}		
 		vv.setLayoutParams(params);
 	}
+	
+//	@Override
+//	protected void onCreate(Bundle savedInstanceState) {
+//		
+//		// TODO Auto-generated method stub
+//		super.onCreate(savedInstanceState);
+//		try {
+//			LayoutInflater inflater = LayoutInflater.from(this);
+//			scrollView = (MyHorizontalScrollView) inflater.inflate(
+//					R.layout.horz_scroll_with_list_menu, null);
+//			setContentView(scrollView);
+//
+//			menu = inflater.inflate(R.layout.horz_scroll_menu, null);
+//			app = inflater.inflate(R.layout.list_other_video_1, null);
+//			
+////			requestWindowFeature(Window.FEATURE_NO_TITLE);
+////			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+////					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+////			setContentView(R.layout.list_other_video_1);
+//			
+//			instance = this;
+//			
+//			Bundle b = this.getIntent().getExtras();
+//			ConnectServer.instance.getOtherListVideo(b.getString("id"));
+//			title = b.getString("title");
+//			download = b.getString("download");
+//			file = b.getString("file");
+//			src = b.getString("src");
+//
+////			TableLayout view = (TableLayout) findViewById(R.id.layout_video);
+////			view.setVisibility(TableLayout.VISIBLE);
+//
+//			table_header = (TableLayout)app.findViewById(R.id.table_header);
+//			
+//			// TODO VIDEO
+//			/* variables init */
+////			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//			vv = (VideoView) app.findViewById(R.id.videoView1);
+////			// listeners for VideoView:
+//			vv.setOnErrorListener(this);
+//			vv.setOnPreparedListener(this);
+//
+//			mediaTime = (TextView) app.findViewById(R.id.time);
+//			mediaTimeElapsed = (TextView) app.findViewById(R.id.timeElapsed);
+//
+//			progress = (ProgressBar) app.findViewById(R.id.progressBar);
+//			loading = new ProgressDialog(this);
+//			loading.setMessage("Xin chờ...");
+////
+////			vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+////
+//			readyToPlay = false;
+//
+//			initMedia();
+//			//playMedia(null);
+//			// END						
+//			setSizeVideo();
+//			
+//			listview = (ListView) menu.findViewById(R.id.list);
+//			ViewUtils.initListView(this, listview,
+//					android.R.layout.simple_list_item_1);
+//
+//			
+//			btnSlide = (ImageView) app.findViewById(R.id.imageView2);
+//
+//			clickListener = new ClickListenerForScrolling(scrollView, menu);
+//			btnSlide.setOnClickListener(clickListener);
+//
+//			final View[] children = new View[] { menu, app };
+//
+//			// Scroll to app (view[1]) when layout finished.
+//			int scrollToViewIdx = 1;
+//			scrollView.initViews(children, scrollToViewIdx,
+//					new SizeCallbackForMenu(btnSlide));
+//			
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+//	private void setSizeVideo(){
+//		LayoutParams params = vv.getLayoutParams();		
+//		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//			table_header.setVisibility(View.GONE);
+//			menu.setVisibility(View.GONE);
+//			params.width = ConnectServer.instance.height;
+//			params.height = ConnectServer.instance.width;
+//
+//		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+//			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//			table_header.setVisibility(View.VISIBLE);
+//			menu.setVisibility(View.GONE);
+//			params.width = ConnectServer.instance.width;
+//			params.height = ConnectServer.instance.height/2;
+//		}		
+//		vv.setLayoutParams(params);
+//	}	
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -391,24 +529,38 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //		return v1;
 //	}
 	
-
-
+	public View createHeaderView(){
+		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.header_other_video, null);
+		
+		TextView txt_title = (TextView)v.findViewById(R.id.txt_title);
+		txt_title.setText(title);
+		CustomFontsLoader.setFont(txt_title, 0, instance);
+		
+		TextView txt_time_view = (TextView)v.findViewById(R.id.txt_time_view);
+		txt_time_view.setText("Time :" + duration + "| Views :" + download);
+		CustomFontsLoader.setFont(txt_time_view, 0, instance);
+		
+		return v;
+	}
+	
+	public View createFooterView(){
+		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.footer_other, null);
+		
+		return v;
+	}
 	// init ListView
 	public void initListView() {
 		arrayitems = ConnectServer.instance.m_OtherListItem;
-		listrecordarray = new ListRecordAdapter(this, R.layout.items_new, arrayitems,
+		listrecordarray = new ListRecordAdapter(this, R.layout.item_other, arrayitems,
 				"http://vnexpress.net/");
 		listItems = (ListView) findViewById(R.id.listItems);
 		// TODO add header view
-		//listItems.addHeaderView(createHeaderView());
-
-		//
-		// LayoutInflater inflater =
-		// (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		// View v = (View)inflater.inflate(R.layout.page, null,false);
-		// listItems.addFooterView(v);
-		//
-		//
+		listItems.addHeaderView(createHeaderView());
+		//TODO add footer view
+		listItems.addFooterView(createFooterView());
+	
 		listItems.setAdapter(listrecordarray);
 		listItems.setTextFilterEnabled(true);
 		listItems.setFocusableInTouchMode(false);
@@ -421,6 +573,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				// Intent mIntent = new Intent(instance, Video.class);
 				// mIntent.putExtra("file", file);
 				// startActivity(mIntent);
+				
 				Item item = arrayitems.get(position);
 				Intent mIntent = new Intent(instance, ListOtherVideo.class);
 				mIntent.putExtra("id", item.getId());
@@ -429,6 +582,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				mIntent.putExtra("file", item.getFile());
 				mIntent.putExtra("src", item.getSrc());
 				instance.startActivity(mIntent);
+				instance.finish();
 
 				// final int m_position = position;
 				//
@@ -858,6 +1012,90 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 //		startActivity(mIntent);
 //	}
 
+	/**
+	 * Helper for examples with a HSV that should be scrolled by a menu View's
+	 * width.
+	 */
+	static class ClickListenerForScrolling implements OnClickListener {
+		HorizontalScrollView scrollView;
+		View menu;
+		/**
+		 * Menu must NOT be out/shown to start with.
+		 */
+		boolean menuOut = false;
+
+		public ClickListenerForScrolling(HorizontalScrollView scrollView,
+				View menu) {
+			super();
+			this.scrollView = scrollView;
+			this.menu = menu;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Context context = menu.getContext();
+			// String msg = "Slide " + new Date();
+			// Toast.makeText(context, msg, 1000).show();
+			// System.out.println(msg);
+
+			int menuWidth = menu.getMeasuredWidth();
+
+			// Ensure menu is visible
+			menu.setVisibility(View.VISIBLE);
+
+			if (!menuOut) {
+				// Scroll to 0 to reveal menu
+				int left = 0;
+				scrollView.smoothScrollTo(left, 0);
+			} else {
+				// Scroll to menuWidth so menu isn't on screen.
+				int left = menuWidth;
+				scrollView.smoothScrollTo(left, 0);
+			}
+			menuOut = !menuOut;
+		}
+	}
+
+	/**
+	 * Helper that remembers the width of the 'slide' button, so that the
+	 * 'slide' button remains in view, even when the menu is showing.
+	 */
+	static class SizeCallbackForMenu implements SizeCallback {
+		int btnWidth;
+		View btnSlide;
+
+		public SizeCallbackForMenu(View btnSlide) {
+			super();
+			this.btnSlide = btnSlide;
+
+		}
+
+		@Override
+		public void onGlobalLayout() {
+			btnWidth = btnSlide.getMeasuredWidth();
+			System.out.println("btnWidth=" + btnWidth);
+
+//			Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
+//					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void getViewSize(int idx, int w, int h, int[] dims) {
+			dims[0] = w;
+			dims[1] = h;
+			final int menuIdx = 0;
+			if (idx == menuIdx) {
+				dims[0] = w - 2 * btnWidth;
+
+//				Toast.makeText(instance, "getViewSize size " + this.btnWidth,
+//						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
+//						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+	
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 

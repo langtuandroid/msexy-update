@@ -726,7 +726,7 @@ public class HorzScrollWithListMenu extends Activity {
 			dims[1] = h;
 			final int menuIdx = 0;
 			if (idx == menuIdx) {
-				dims[0] = w - 2 * btnWidth;
+				dims[0] = w - btnWidth;
 
 //				Toast.makeText(instance, "getViewSize size " + this.btnWidth,
 //						Toast.LENGTH_SHORT).show();
