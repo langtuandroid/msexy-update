@@ -10,18 +10,19 @@
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal" >
 
         <FrameLayout
             android:id="@+id/frameLayout1"
             android:layout_width="150dp"
-            android:layout_height="100dp" >
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical" >
 
             <ImageView
                 android:id="@+id/imageView1"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@drawable/bg" >
             </ImageView>
@@ -46,8 +47,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:gravity="left"                
+                android:gravity="left"
+                android:text="rdsrfs"
                 android:textColor="#ff0000" >
+
             </TextView>
 
             <LinearLayout
@@ -57,21 +60,25 @@
 
                 <TextView
                     android:id="@+id/txtDuration"
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left"
-                    android:gravity="bottom|left"                                  
-                    android:textColor="#323232" >
+                    android:layout_weight="1"
+                    android:gravity="bottom|left"
+                    android:text="fsdfsdf"
+                    android:textColor="#a2a09f" >
+
                 </TextView>
 
                 <TextView
                     android:id="@+id/txtDateTime"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"                    
-                    android:textColor="#323232" >
+                    android:layout_gravity="bottom|right"
+                    android:layout_weight="1"
+                    android:text="fsdfsdf"
+                    android:textColor="#a2a09f" >
+
                 </TextView>
             </LinearLayout>
         </LinearLayout>
