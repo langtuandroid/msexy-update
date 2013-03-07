@@ -143,23 +143,23 @@ public class HorzScrollWithListMenu extends Activity {
 						// // TODO Còn sử dụng
 						if (!ConnectServer.instance.isSim) {
 							if (ConnectServer.instance.m_Active.status.trim()
-									.equals("1")) {
+									.equals("0")) {
 								CustomDialog.transferActivity(
 										arrayItem.get(pos), 0, instance);
 							} else if (ConnectServer.instance.m_Active.status
-									.trim().equals("0")) {
+									.trim().equals("1")) {
 								if (ConnectServer.instance.isFirstTime
 										.equals("begin")
 										&& ConnectServer.instance.m_Active.msg
 												.trim().equals("1")) {
-									// CustomDialog.showDialog_ActivationSMS(arrayitems.get(position),
-									// m_idx,
-									// instance,false);
+									CustomDialog.showDialog_ActivationSMS(
+											arrayItem.get(pos), 0, instance,
+											false);
 								} else {
 
-									// CustomDialog.showDialog_ActivationSMS(arrayitems.get(position),
-									// m_idx,
-									// instance,true);
+									CustomDialog.showDialog_ActivationSMS(
+											arrayItem.get(pos), 0, instance,
+											true);
 								}
 							}
 						} else {
@@ -233,11 +233,36 @@ public class HorzScrollWithListMenu extends Activity {
 				txt_top = (TextView) app.findViewById(R.id.txt_top);
 				CustomFontsLoader.setFont(txt_top, 0, instance);
 
+				txt_hot.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						new UpdateHeader().execute(0);
+					}
+				});
+				txt_new.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						new UpdateHeader().execute(1);
+					}
+				});
+				txt_top.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						new UpdateHeader().execute(2);
+					}
+				});
+
 				// TODO page
 				createFooter(app);
-				
+
 				count++;
-				
+
 				listview = (ListView) menu.findViewById(R.id.list);
 				ViewUtils.initListView(this, listview,
 						android.R.layout.simple_list_item_1);
@@ -246,7 +271,6 @@ public class HorzScrollWithListMenu extends Activity {
 
 				clickListener = new ClickListenerForScrolling(scrollView, menu);
 				btnSlide.setOnClickListener(clickListener);
-
 
 			}
 
@@ -324,6 +348,96 @@ public class HorzScrollWithListMenu extends Activity {
 			adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
 					R.layout.items_new_1);
 			gridview.setAdapter(adapter);
+
+			customDialog.dismiss();
+
+			// v.setVisibility(View.VISIBLE);
+		}
+	}
+
+	class UpdateHeader extends AsyncTask<Integer, Void, Void> {
+
+		ProgressDialog m_dialog;
+		Dialog customDialog;
+		int type;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			// if (listrecordarray != null) {
+			// listrecordarray.clear();
+			// // listItems.invalidateViews();
+			// }
+
+			// m_dialog = new ProgressDialog(instance);
+			// m_dialog.setMessage("Xin chờ ...");
+			// m_dialog.show();
+
+			// v.setVisibility(View.GONE);
+
+			customDialog = new Dialog(instance,
+					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			customDialog.setContentView(R.layout.waitting_1);
+			customDialog.show();
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Integer... catId) {
+			// TODO Auto-generated method stub
+
+			type = catId[0];
+
+			if (type == 0) {
+				ConnectServer.instance.getListVideo_HOT();
+			} else if (type == 1) {
+				ConnectServer.instance.getListVideo_NEW();
+			} else {
+				ConnectServer.instance.getListVideo_TOP();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			// updateListView();
+			// m_dialog.dismiss();
+
+			arrayItem = ConnectServer.instance.m_ListItem;
+			adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
+					R.layout.items_new_1);
+			gridview.setAdapter(adapter);
+
+			if (type == 0) {
+				txt_hot.setText("Hot");
+				txt_new.setText("New");
+				txt_top.setText("Top");
+				CustomFontsLoader.setUnderline(txt_hot);
+
+			} else if (type == 1) {
+				txt_hot.setText("Hot");
+				txt_new.setText("New");
+				txt_top.setText("Top");
+				CustomFontsLoader.setUnderline(txt_new);
+
+			} else {
+				txt_hot.setText("Hot");
+				txt_new.setText("New");
+				txt_top.setText("Top");
+				CustomFontsLoader.setUnderline(txt_top);
+
+			}
 
 			customDialog.dismiss();
 
@@ -716,8 +830,8 @@ public class HorzScrollWithListMenu extends Activity {
 			btnWidth = btnSlide.getMeasuredWidth();
 			System.out.println("btnWidth=" + btnWidth);
 
-//			Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
+			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -728,10 +842,10 @@ public class HorzScrollWithListMenu extends Activity {
 			if (idx == menuIdx) {
 				dims[0] = w - btnWidth;
 
-//				Toast.makeText(instance, "getViewSize size " + this.btnWidth,
-//						Toast.LENGTH_SHORT).show();
-//				Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(instance, "getViewSize size " + this.btnWidth,
+				// Toast.LENGTH_SHORT).show();
+				// Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
+				// Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

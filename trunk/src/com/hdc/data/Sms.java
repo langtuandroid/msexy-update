@@ -96,6 +96,13 @@ public class Sms {
 		this.message = message;
 	}
 	
+	public void setN_SMS(String nsms){
+		this.nSMS = Integer.parseInt(nsms);
+	}
+	
+	public int getN_SMS(){
+		return nSMS;
+	}
 	
 	public String getMo(boolean isKichHoat) {
 		String m_MO = "";
@@ -176,6 +183,7 @@ public class Sms {
 	/**
 	 * service code va mo default
 	 */
+	private int nSMS;
 	private String mo;
 	private String serviceCode;
 	private ArrayList<String> m_ListServiceCode = new ArrayList<String>();
@@ -211,6 +219,10 @@ public class Sms {
 		try {
 			if (root.getInt("status") == 1) {
 				JSONObject jsonSms = root.getJSONObject("sms");
+				
+				if (jsonSms.has("nSms")) {
+					setN_SMS(jsonSms.getString("nSms").trim());
+				}				
 				if (jsonSms.has("message")) {
 					setMessage(jsonSms.getString("message").trim());
 				}

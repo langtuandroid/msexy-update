@@ -38,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -178,6 +179,9 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	TextView txt_new;
 	TextView txt_top;
 
+	ImageView imgPlay;
+	boolean flag_Play = true;
+	FrameLayout layout_video;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +244,21 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			setSizeVideo();
 			
 			initListView();
+			
+			imgPlay = (ImageView)findViewById(R.id.img_play);
+
+			layout_video = (FrameLayout)findViewById(R.id.video);
+			
+			layout_video.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					pauseMedia(flag_Play);
+				}
+			});
+			
+
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -574,7 +593,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				// mIntent.putExtra("file", file);
 				// startActivity(mIntent);
 				
-				Item item = arrayitems.get(position);
+				Item item = arrayitems.get((int)id);
 				Intent mIntent = new Intent(instance, ListOtherVideo.class);
 				mIntent.putExtra("id", item.getId());
 				mIntent.putExtra("title", item.getTitle());
@@ -1004,6 +1023,19 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				timer.cancel();
 			}
 		}
+	}
+	
+	public void pauseMedia(boolean play){
+		if(!play){			
+			vv.start();
+			timer.start();
+			imgPlay.setVisibility(View.GONE);
+		}else{
+			vv.pause();
+			timer.cancel();
+			imgPlay.setVisibility(View.VISIBLE);
+		}
+		flag_Play=!flag_Play;
 	}
 	
 //	public void zoomIn(View v){
