@@ -23,7 +23,7 @@ public class CustomDialog {
 			final Context context, final boolean isDialog) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflater.inflate(R.layout.dialog, null, false);
+		View v = inflater.inflate(R.layout.dialog_1, null, false);
 
 		if (isDialog) {
 			TextView txt_title = (TextView) v.findViewById(R.id.txt_title);

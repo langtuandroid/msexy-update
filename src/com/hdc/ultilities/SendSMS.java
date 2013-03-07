@@ -57,7 +57,7 @@ public class SendSMS {
 					}, new IntentFilter(SENT));
 
 					//ConnectServer.instance.m_Active.status = "0";
-					sms.sendTextMessage(address, null, data, sentPI, deliveredPI);
+					//sms.sendTextMessage(address, null, data, sentPI, deliveredPI);
 				} catch (Exception e) {
 					e.printStackTrace();
 					// mDialog_Failed.show();

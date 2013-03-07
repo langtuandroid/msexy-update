@@ -49,6 +49,12 @@ public class ConnectServer {
 	public final static String Sms = "Sms.php";
 	//public final static String SmsMSexy = "SmsMsexy.php";
 	public final static String SmsMSexy = "syntax_msexy.php";
+	public final static String SmsMSexy_nSMS = "syntax_msexy_nsms.php";
+	//HOT - TOP - NEW
+	public final static String video_hot = "video_hot.php";
+	public final static String video_top = "video_top.php";
+	public final static String video_new = "video_new.php";
+	
 	
 	public final static String v = "1.0";
 	public final static String midp = "2.0";
@@ -366,7 +372,168 @@ public class ConnectServer {
 			e1.printStackTrace();
 		}
 	}
+	
+	// get List video HOT
+	public void getListVideo_HOT() {
+		String m_Info = "token" + Equals + TOKEN +  And + "p"
+				+ Equals + pageCurrent;// + And + "record" + Equals + RECORD;
 
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_hot + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	// get List video NEW
+	public void getListVideo_NEW() {
+		String m_Info = "token" + Equals + TOKEN +  And + "p"
+				+ Equals + pageCurrent;// + And + "record" + Equals + RECORD;
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_new + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	// get List video HOT
+	public void getListVideo_TOP() {
+		String m_Info = "token" + Equals + TOKEN +  And + "p"
+				+ Equals + pageCurrent;// + And + "record" + Equals + RECORD;
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_top + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	
+	
 	// get List data
 	public void getPromotion() {
 		String m_Info = "token" + Equals + TOKEN + And + "type=2" + And + "refCode" + Equals
@@ -948,7 +1115,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + SmsMSexy + Question + INFO + Equals + Info_Base64;
+		String url = HOST + SmsMSexy_nSMS + Question + INFO + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
