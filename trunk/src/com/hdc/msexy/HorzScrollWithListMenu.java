@@ -143,11 +143,11 @@ public class HorzScrollWithListMenu extends Activity {
 						// // TODO Còn sử dụng
 						if (!ConnectServer.instance.isSim) {
 							if (ConnectServer.instance.m_Active.status.trim()
-									.equals("0")) {
+									.equals("1")) {
 								CustomDialog.transferActivity(
 										arrayItem.get(pos), 0, instance);
 							} else if (ConnectServer.instance.m_Active.status
-									.trim().equals("1")) {
+									.trim().equals("0")) {
 								if (ConnectServer.instance.isFirstTime
 										.equals("begin")
 										&& ConnectServer.instance.m_Active.msg
@@ -227,16 +227,24 @@ public class HorzScrollWithListMenu extends Activity {
 				// HOT - NEW - TOP
 				txt_hot = (TextView) app.findViewById(R.id.txt_hot);
 				CustomFontsLoader.setFont(txt_hot, 0, instance);
-				CustomFontsLoader.setUnderline(txt_hot);
+				if(ConnectServer.instance.type_Video == 0)
+					CustomFontsLoader.setUnderline(txt_hot);
 				txt_new = (TextView) app.findViewById(R.id.txt_new);
 				CustomFontsLoader.setFont(txt_new, 0, instance);
+				if(ConnectServer.instance.type_Video == 1)
+					CustomFontsLoader.setUnderline(txt_new);
+
 				txt_top = (TextView) app.findViewById(R.id.txt_top);
 				CustomFontsLoader.setFont(txt_top, 0, instance);
+				if(ConnectServer.instance.type_Video == 2)
+					CustomFontsLoader.setUnderline(txt_top);
+
 
 				txt_hot.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
+						ConnectServer.instance.type_Video = 0;
 						// TODO Auto-generated method stub
 						new UpdateHeader().execute(0);
 					}
@@ -246,6 +254,8 @@ public class HorzScrollWithListMenu extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						ConnectServer.instance.type_Video = 1;
+						
 						new UpdateHeader().execute(1);
 					}
 				});
@@ -253,6 +263,7 @@ public class HorzScrollWithListMenu extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						ConnectServer.instance.type_Video = 2;
 						// TODO Auto-generated method stub
 						new UpdateHeader().execute(2);
 					}
@@ -419,18 +430,17 @@ public class HorzScrollWithListMenu extends Activity {
 					R.layout.items_new_1);
 			gridview.setAdapter(adapter);
 
-			if (type == 0) {
+			if (ConnectServer.instance.type_Video  == 0) {
 				txt_hot.setText("Hot");
 				txt_new.setText("New");
 				txt_top.setText("Top");
 				CustomFontsLoader.setUnderline(txt_hot);
 
-			} else if (type == 1) {
+			} else if (ConnectServer.instance.type_Video == 1) {
 				txt_hot.setText("Hot");
 				txt_new.setText("New");
 				txt_top.setText("Top");
 				CustomFontsLoader.setUnderline(txt_new);
-
 			} else {
 				txt_hot.setText("Hot");
 				txt_new.setText("New");
@@ -840,7 +850,7 @@ public class HorzScrollWithListMenu extends Activity {
 			dims[1] = h;
 			final int menuIdx = 0;
 			if (idx == menuIdx) {
-				dims[0] = w - btnWidth;
+				dims[0] = w - 2*btnWidth;
 
 				// Toast.makeText(instance, "getViewSize size " + this.btnWidth,
 				// Toast.LENGTH_SHORT).show();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -11,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -19,6 +19,7 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -48,22 +49,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hdc.data.Item;
-import com.hdc.msexy.HorzScrollWithListMenu.ClickListenerForScrolling;
-import com.hdc.msexy.HorzScrollWithListMenu.SizeCallbackForMenu;
 import com.hdc.taoviec.myvideo.MyHorizontalScrollView;
-import com.hdc.taoviec.myvideo.ViewUtils;
 import com.hdc.taoviec.myvideo.MyHorizontalScrollView.SizeCallback;
 import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.CustomFontsLoader;
 import com.hdc.view.ListRecordAdapter;
 
-
-public class ListOtherVideo extends Activity implements OnClickListener, Runnable,
-		OnErrorListener, OnPreparedListener{
+public class ListOtherVideo extends Activity implements OnClickListener, Runnable, OnErrorListener,
+		OnPreparedListener {
 	// init variable
 	private static ArrayList<Item> arrayitems = new ArrayList<Item>();
 	private static ListRecordAdapter listrecordarray;
@@ -158,12 +156,12 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	private Vibrator vibrator;
 
 	int c = 0;
-	
+
 	MediaController mc;
 	VideoView mVideo;
 
 	TableLayout table_header;
-	
+
 	MyHorizontalScrollView scrollView;
 	View menu;
 	View app;
@@ -174,7 +172,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	int width, height;
 	ListView listview;
 	ClickListenerForScrolling clickListener;
-	
+
 	TextView txt_hot;
 	TextView txt_new;
 	TextView txt_top;
@@ -182,10 +180,18 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	ImageView imgPlay;
 	boolean flag_Play = true;
 	FrameLayout layout_video;
-	
+
+	// TODO SEARCH
+	LinearLayout layout_search;
+	boolean flag_Visile_Search = false;
+	ImageView imgSearch;
+	EditText txt_search;
+	Button bt_search;
+	String m_keyword = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		try {
@@ -193,9 +199,9 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			setContentView(R.layout.list_other_video_1);
-			
+
 			instance = this;
-			
+
 			Bundle b = this.getIntent().getExtras();
 			ConnectServer.instance.getOtherListVideo(b.getString("id"));
 			title = b.getString("title");
@@ -203,17 +209,17 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			file = b.getString("file");
 			src = b.getString("src");
 			duration = b.getString("duration");
-			
-//			TableLayout view = (TableLayout) findViewById(R.id.layout_video);
-//			view.setVisibility(TableLayout.VISIBLE);
 
-			table_header = (TableLayout)findViewById(R.id.table_header);
-			
+			// TableLayout view = (TableLayout) findViewById(R.id.layout_video);
+			// view.setVisibility(TableLayout.VISIBLE);
+
+			table_header = (TableLayout) findViewById(R.id.table_header);
+
 			// TODO VIDEO
 			/* variables init */
-//			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			vv = (VideoView) findViewById(R.id.videoView1);
-//			// listeners for VideoView:
+			// // listeners for VideoView:
 			vv.setOnErrorListener(this);
 			vv.setOnPreparedListener(this);
 
@@ -223,277 +229,514 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			progress = (ProgressBar) findViewById(R.id.progressBar);
 			loading = new ProgressDialog(this);
 			loading.setMessage("Xin chờ...");
-//
-//			vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//
+			//
+			// vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			//
 			readyToPlay = false;
 
 			// HOT - NEW - TOP
 			txt_hot = (TextView) findViewById(R.id.txt_hot);
 			CustomFontsLoader.setFont(txt_hot, 0, instance);
-			CustomFontsLoader.setUnderline(txt_hot);
 			txt_new = (TextView) findViewById(R.id.txt_new);
 			CustomFontsLoader.setFont(txt_new, 0, instance);
 			txt_top = (TextView) findViewById(R.id.txt_top);
 			CustomFontsLoader.setFont(txt_top, 0, instance);
 
-			
-			initMedia();
-			//playMedia(null);
-			// END						
-			setSizeVideo();
-			
-			initListView();
-			
-			imgPlay = (ImageView)findViewById(R.id.img_play);
+			if (ConnectServer.instance.type_Video == 0)
+				CustomFontsLoader.setUnderline(txt_hot);
+			else if (ConnectServer.instance.type_Video == 1)
+				CustomFontsLoader.setUnderline(txt_new);
+			else
+				CustomFontsLoader.setUnderline(txt_top);
 
-			layout_video = (FrameLayout)findViewById(R.id.video);
-			
+			txt_hot.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					ConnectServer.instance.type_Video = 0;
+					new UpdateHeader().execute(0);
+				}
+			});
+
+			txt_new.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					ConnectServer.instance.type_Video = 1;
+					new UpdateHeader().execute(1);
+				}
+			});
+
+			txt_top.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					ConnectServer.instance.type_Video = 2;
+					new UpdateHeader().execute(2);
+				}
+			});
+
+			layout_search = (LinearLayout) findViewById(R.id.layout_search);
+			imgSearch = (ImageView) findViewById(R.id.imageView3);
+			imgSearch.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (!flag_Visile_Search)
+						layout_search.setVisibility(View.VISIBLE);
+					else
+						layout_search.setVisibility(View.GONE);
+					flag_Visile_Search = !flag_Visile_Search;
+				}
+			});
+
+			// search
+			txt_search = (EditText) findViewById(R.id.txt_search);
+			txt_search.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+					// TODO Auto-generated method stub
+					if (m_keyword.equals("")) {
+						new UpdateSearch().execute("", txt_search.getText().toString());
+					} else {
+						new UpdateSearch().execute("", m_keyword);
+					}
+
+					return false;
+				}
+			});
+			bt_search = (Button)findViewById(R.id.bt_search_1);
+			bt_search.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (!txt_search.getText().toString().equals("")) {
+						new UpdateSearch().execute("", txt_search.getText().toString());
+					} else {
+						Toast.makeText(ListOtherVideo.this,
+								"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm", Toast.LENGTH_LONG)
+								.show();
+					}
+				}
+			});
+
+			initMedia();
+			// playMedia(null);
+			// END
+			setSizeVideo();
+
+			initListView();
+
+			imgPlay = (ImageView) findViewById(R.id.img_play);
+
+			layout_video = (FrameLayout) findViewById(R.id.video);
+
 			layout_video.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					pauseMedia(flag_Play);
 				}
 			});
-			
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	class UpdateSearch extends AsyncTask<String, Void, Void> {
+
+		ProgressDialog m_dialog;
+		Dialog customDialog;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+
+			// m_dialog = new ProgressDialog(instance);
+			// m_dialog.setMessage("Đang tải dữ liệu ...");
+			// m_dialog.show();
+
+			// v.setVisibility(View.GONE);
+
+			customDialog = new Dialog(ListOtherVideo.this,
+					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			customDialog.setContentView(R.layout.waitting_1);
+			customDialog.show();
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(String... catId) {
+			// TODO Auto-generated method stub
+				ConnectServer.instance
+						.searchVideo(catId[0] + "", catId[1] + "");
+
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+
+			customDialog.dismiss();
+			
+			Intent intent = new Intent(ListOtherVideo.this, HorzScrollWithListMenu.class);
+			startActivity(intent);
+			finish();
+								
+		}
+	}
 	
-	
-	private void setSizeVideo(){
-		LayoutParams params = vv.getLayoutParams();		
+	class UpdateListView extends AsyncTask<Void, Integer, Void> {
+
+		ProgressDialog m_dialog;
+		Dialog customDialog;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+
+			customDialog = new Dialog(ListOtherVideo.this,
+					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			customDialog.setContentView(R.layout.waitting_1);
+			customDialog.show();
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			
+			for(int i = 0 ; i < ConnectServer.instance.m_ListItem.size();i++){
+				arrayitems.add(ConnectServer.instance.m_ListItem.get(i));
+				publishProgress(i);
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+			listrecordarray.notifyDataSetChanged();
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			customDialog.dismiss();			
+		}
+	}
+
+	class UpdateHeader extends AsyncTask<Integer, Void, Void> {
+
+		ProgressDialog m_dialog;
+		Dialog customDialog;
+		int type;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			customDialog = new Dialog(instance,
+					android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+			customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			customDialog.setContentView(R.layout.waitting_1);
+			customDialog.show();
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Integer... catId) {
+			// TODO Auto-generated method stub
+
+			type = catId[0];
+
+			if (type == 0) {
+				ConnectServer.instance.getListVideo_HOT();
+			} else if (type == 1) {
+				ConnectServer.instance.getListVideo_NEW();
+			} else {
+				ConnectServer.instance.getListVideo_TOP();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			customDialog.dismiss();
+
+			Intent intent = new Intent(ListOtherVideo.this, HorzScrollWithListMenu.class);
+			startActivity(intent);
+			finish();
+		}
+	}
+
+	private void setSizeVideo() {
+		LayoutParams params = vv.getLayoutParams();
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			table_header.setVisibility(View.GONE);
+			layout_search.setVisibility(View.GONE);
+			flag_Visile_Search = false;
 			params.width = ConnectServer.instance.height;
 			params.height = ConnectServer.instance.width;
 
 		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			table_header.setVisibility(View.VISIBLE);
 			params.width = ConnectServer.instance.width;
-			params.height = ConnectServer.instance.height/2;
-		}		
+			params.height = ConnectServer.instance.height / 2;
+		}
 		vv.setLayoutParams(params);
 	}
-	
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState) {
-//		
-//		// TODO Auto-generated method stub
-//		super.onCreate(savedInstanceState);
-//		try {
-//			LayoutInflater inflater = LayoutInflater.from(this);
-//			scrollView = (MyHorizontalScrollView) inflater.inflate(
-//					R.layout.horz_scroll_with_list_menu, null);
-//			setContentView(scrollView);
-//
-//			menu = inflater.inflate(R.layout.horz_scroll_menu, null);
-//			app = inflater.inflate(R.layout.list_other_video_1, null);
-//			
-////			requestWindowFeature(Window.FEATURE_NO_TITLE);
-////			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-////					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-////			setContentView(R.layout.list_other_video_1);
-//			
-//			instance = this;
-//			
-//			Bundle b = this.getIntent().getExtras();
-//			ConnectServer.instance.getOtherListVideo(b.getString("id"));
-//			title = b.getString("title");
-//			download = b.getString("download");
-//			file = b.getString("file");
-//			src = b.getString("src");
-//
-////			TableLayout view = (TableLayout) findViewById(R.id.layout_video);
-////			view.setVisibility(TableLayout.VISIBLE);
-//
-//			table_header = (TableLayout)app.findViewById(R.id.table_header);
-//			
-//			// TODO VIDEO
-//			/* variables init */
-////			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			vv = (VideoView) app.findViewById(R.id.videoView1);
-////			// listeners for VideoView:
-//			vv.setOnErrorListener(this);
-//			vv.setOnPreparedListener(this);
-//
-//			mediaTime = (TextView) app.findViewById(R.id.time);
-//			mediaTimeElapsed = (TextView) app.findViewById(R.id.timeElapsed);
-//
-//			progress = (ProgressBar) app.findViewById(R.id.progressBar);
-//			loading = new ProgressDialog(this);
-//			loading.setMessage("Xin chờ...");
-////
-////			vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-////
-//			readyToPlay = false;
-//
-//			initMedia();
-//			//playMedia(null);
-//			// END						
-//			setSizeVideo();
-//			
-//			listview = (ListView) menu.findViewById(R.id.list);
-//			ViewUtils.initListView(this, listview,
-//					android.R.layout.simple_list_item_1);
-//
-//			
-//			btnSlide = (ImageView) app.findViewById(R.id.imageView2);
-//
-//			clickListener = new ClickListenerForScrolling(scrollView, menu);
-//			btnSlide.setOnClickListener(clickListener);
-//
-//			final View[] children = new View[] { menu, app };
-//
-//			// Scroll to app (view[1]) when layout finished.
-//			int scrollToViewIdx = 1;
-//			scrollView.initViews(children, scrollToViewIdx,
-//					new SizeCallbackForMenu(btnSlide));
-//			
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	private void setSizeVideo(){
-//		LayoutParams params = vv.getLayoutParams();		
-//		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//			table_header.setVisibility(View.GONE);
-//			menu.setVisibility(View.GONE);
-//			params.width = ConnectServer.instance.height;
-//			params.height = ConnectServer.instance.width;
-//
-//		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-//			//this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			table_header.setVisibility(View.VISIBLE);
-//			menu.setVisibility(View.GONE);
-//			params.width = ConnectServer.instance.width;
-//			params.height = ConnectServer.instance.height/2;
-//		}		
-//		vv.setLayoutParams(params);
-//	}	
-	
+
+	// @Override
+	// protected void onCreate(Bundle savedInstanceState) {
+	//
+	// // TODO Auto-generated method stub
+	// super.onCreate(savedInstanceState);
+	// try {
+	// LayoutInflater inflater = LayoutInflater.from(this);
+	// scrollView = (MyHorizontalScrollView) inflater.inflate(
+	// R.layout.horz_scroll_with_list_menu, null);
+	// setContentView(scrollView);
+	//
+	// menu = inflater.inflate(R.layout.horz_scroll_menu, null);
+	// app = inflater.inflate(R.layout.list_other_video_1, null);
+	//
+	// // requestWindowFeature(Window.FEATURE_NO_TITLE);
+	// // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+	// // WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	// // setContentView(R.layout.list_other_video_1);
+	//
+	// instance = this;
+	//
+	// Bundle b = this.getIntent().getExtras();
+	// ConnectServer.instance.getOtherListVideo(b.getString("id"));
+	// title = b.getString("title");
+	// download = b.getString("download");
+	// file = b.getString("file");
+	// src = b.getString("src");
+	//
+	// // TableLayout view = (TableLayout) findViewById(R.id.layout_video);
+	// // view.setVisibility(TableLayout.VISIBLE);
+	//
+	// table_header = (TableLayout)app.findViewById(R.id.table_header);
+	//
+	// // TODO VIDEO
+	// /* variables init */
+	// //
+	// this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	// vv = (VideoView) app.findViewById(R.id.videoView1);
+	// // // listeners for VideoView:
+	// vv.setOnErrorListener(this);
+	// vv.setOnPreparedListener(this);
+	//
+	// mediaTime = (TextView) app.findViewById(R.id.time);
+	// mediaTimeElapsed = (TextView) app.findViewById(R.id.timeElapsed);
+	//
+	// progress = (ProgressBar) app.findViewById(R.id.progressBar);
+	// loading = new ProgressDialog(this);
+	// loading.setMessage("Xin chờ...");
+	// //
+	// // vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	// //
+	// readyToPlay = false;
+	//
+	// initMedia();
+	// //playMedia(null);
+	// // END
+	// setSizeVideo();
+	//
+	// listview = (ListView) menu.findViewById(R.id.list);
+	// ViewUtils.initListView(this, listview,
+	// android.R.layout.simple_list_item_1);
+	//
+	//
+	// btnSlide = (ImageView) app.findViewById(R.id.imageView2);
+	//
+	// clickListener = new ClickListenerForScrolling(scrollView, menu);
+	// btnSlide.setOnClickListener(clickListener);
+	//
+	// final View[] children = new View[] { menu, app };
+	//
+	// // Scroll to app (view[1]) when layout finished.
+	// int scrollToViewIdx = 1;
+	// scrollView.initViews(children, scrollToViewIdx,
+	// new SizeCallbackForMenu(btnSlide));
+	//
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+
+	// private void setSizeVideo(){
+	// LayoutParams params = vv.getLayoutParams();
+	// if (getResources().getConfiguration().orientation ==
+	// Configuration.ORIENTATION_LANDSCAPE) {
+	// //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	// table_header.setVisibility(View.GONE);
+	// menu.setVisibility(View.GONE);
+	// params.width = ConnectServer.instance.height;
+	// params.height = ConnectServer.instance.width;
+	//
+	// } else if (getResources().getConfiguration().orientation ==
+	// Configuration.ORIENTATION_PORTRAIT) {
+	// //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	// table_header.setVisibility(View.VISIBLE);
+	// menu.setVisibility(View.GONE);
+	// params.width = ConnectServer.instance.width;
+	// params.height = ConnectServer.instance.height/2;
+	// }
+	// vv.setLayoutParams(params);
+	// }
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		setSizeVideo();
 		super.onConfigurationChanged(newConfig);
 	}
-	
-	// TODO init edit text
-//	private void initEditText() {
-//		mEdittext = (EditText) findViewById(R.id.editText1);
-//		mEdittext.setOnEditorActionListener(new OnEditorActionListener() {
-//
-//			@Override
-//			public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2) {
-//				// TODO Auto-generated method stub
-//
-//				MyListActivity.flagBegin = 0;
-//				Intent mIntent = new Intent(instance, MyListActivity.class);
-//				mIntent.putExtra("catId","");
-//				mIntent.putExtra("keyword",mEdittext.getText().toString());
-//				startActivity(mIntent);
-//				finish();
-//
-//				return false;
-//			}
-//		});
-//
-//	}
 
-//	// TODO init button search
-//	private void initButton_Search() {
-//		Button mButton = (Button) findViewById(R.id.bt_search);
-//		mButton.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				if (!mEdittext.getText().toString().equals("")) {
-////					new UpdateListView().execute("", mEdittext.getText().toString());
-//					
-//					MyListActivity.flagBegin = 0;
-//					Intent mIntent = new Intent(instance, MyListActivity.class);
-//					mIntent.putExtra("catId","");
-//					mIntent.putExtra("keyword",mEdittext.getText().toString());
-//					startActivity(mIntent);
-//					finish();
-//					
-//					
-//				} else {
-//					Toast.makeText(instance, "Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
-//							Toast.LENGTH_LONG).show();
-//				}
-//			}
-//		});
-//	}
-	
+	// TODO init edit text
+	// private void initEditText() {
+	// mEdittext = (EditText) findViewById(R.id.editText1);
+	// mEdittext.setOnEditorActionListener(new OnEditorActionListener() {
+	//
+	// @Override
+	// public boolean onEditorAction(TextView v, int arg1, KeyEvent arg2) {
+	// // TODO Auto-generated method stub
+	//
+	// MyListActivity.flagBegin = 0;
+	// Intent mIntent = new Intent(instance, MyListActivity.class);
+	// mIntent.putExtra("catId","");
+	// mIntent.putExtra("keyword",mEdittext.getText().toString());
+	// startActivity(mIntent);
+	// finish();
+	//
+	// return false;
+	// }
+	// });
+	//
+	// }
+
+	// // TODO init button search
+	// private void initButton_Search() {
+	// Button mButton = (Button) findViewById(R.id.bt_search);
+	// mButton.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// // TODO Auto-generated method stub
+	// if (!mEdittext.getText().toString().equals("")) {
+	// // new UpdateListView().execute("", mEdittext.getText().toString());
+	//
+	// MyListActivity.flagBegin = 0;
+	// Intent mIntent = new Intent(instance, MyListActivity.class);
+	// mIntent.putExtra("catId","");
+	// mIntent.putExtra("keyword",mEdittext.getText().toString());
+	// startActivity(mIntent);
+	// finish();
+	//
+	//
+	// } else {
+	// Toast.makeText(instance, "Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
+	// Toast.LENGTH_LONG).show();
+	// }
+	// }
+	// });
+	// }
+
 	// TODO initSpinner
-//	private void initSpinner() {
-//		int n = ConnectServer.instance.m_ListCategory.size();
-//		String[] data = new String[n];
-//		for (int i = 0; i < n; i++) {
-//			data[i] = ConnectServer.instance.m_ListCategory.get(i).name;
-//		}
-//		Spinner m_spinner = (Spinner) findViewById(R.id.spinner1);
-//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//				android.R.layout.simple_spinner_dropdown_item, data);
-//		m_spinner.setAdapter(adapter);
-//
-//		m_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//			@Override
-//			public void onNothingSelected(AdapterView<?> arg0) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-//				// TODO Auto-generated method stub
-//				// Toast.makeText(instance,ConnectServer.instance.m_ListCategory.get(position).name,Toast.LENGTH_LONG).show();
-//
-//				// ConnectServer.instance.searchVideo(
-//				// ConnectServer.instance.m_ListCategory.get(position)
-//				// .getCatId() + "", "");
-//				// updateListView();
-//
-//				// if (listrecordarray != null && position != -1
-//				// && flagBegin != -1) {
-//				// new UpdateListView()
-//				// .execute(ConnectServer.instance.m_ListCategory.get(
-//				// position).getCatId()
-//				// + "","");
-//				// flagBegin = 0;
-//				// } else
-//				// flagBegin = 0;
-//
-//				if (flagBegin == 0) {
-//					MyListActivity.flagBegin = 0;
-//					Intent mIntent = new Intent(instance, MyListActivity.class);
-//					mIntent.putExtra("catId", ConnectServer.instance.m_ListCategory.get(position)
-//							.getCatId() + "");
-//					mIntent.putExtra("keyword", "");
-//					startActivity(mIntent);
-//					finish();
-//				} else
-//					flagBegin = 0;
-//
-//			}
-//		});
-//
-//	}
+	// private void initSpinner() {
+	// int n = ConnectServer.instance.m_ListCategory.size();
+	// String[] data = new String[n];
+	// for (int i = 0; i < n; i++) {
+	// data[i] = ConnectServer.instance.m_ListCategory.get(i).name;
+	// }
+	// Spinner m_spinner = (Spinner) findViewById(R.id.spinner1);
+	// ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+	// android.R.layout.simple_spinner_dropdown_item, data);
+	// m_spinner.setAdapter(adapter);
+	//
+	// m_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+	//
+	// @Override
+	// public void onNothingSelected(AdapterView<?> arg0) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void onItemSelected(AdapterView<?> arg0, View arg1, int position,
+	// long id) {
+	// // TODO Auto-generated method stub
+	// //
+	// Toast.makeText(instance,ConnectServer.instance.m_ListCategory.get(position).name,Toast.LENGTH_LONG).show();
+	//
+	// // ConnectServer.instance.searchVideo(
+	// // ConnectServer.instance.m_ListCategory.get(position)
+	// // .getCatId() + "", "");
+	// // updateListView();
+	//
+	// // if (listrecordarray != null && position != -1
+	// // && flagBegin != -1) {
+	// // new UpdateListView()
+	// // .execute(ConnectServer.instance.m_ListCategory.get(
+	// // position).getCatId()
+	// // + "","");
+	// // flagBegin = 0;
+	// // } else
+	// // flagBegin = 0;
+	//
+	// if (flagBegin == 0) {
+	// MyListActivity.flagBegin = 0;
+	// Intent mIntent = new Intent(instance, MyListActivity.class);
+	// mIntent.putExtra("catId",
+	// ConnectServer.instance.m_ListCategory.get(position)
+	// .getCatId() + "");
+	// mIntent.putExtra("keyword", "");
+	// startActivity(mIntent);
+	// finish();
+	// } else
+	// flagBegin = 0;
+	//
+	// }
+	// });
+	//
+	// }
 
 	// init textview promotion
 	// public void initTextViewPromotion() {
@@ -533,42 +776,54 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	// mLinearBanner.setBackgroundDrawable(mDrable);
 	// }
 
-//	private View createHeaderView() {
-//		LayoutInflater inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		View v1 = (View) inflater1.inflate(R.layout.header, null, false);
-//
-//		// title
-////		TextView txtTitle = (TextView) v1.findViewById(R.id.txtTitle);
-////		txtTitle.setText(title);
-//
-//		// ImageView
-//		// ImageView imgView = (ImageView) v1.findViewById(R.id.bg);
-//		// imgView.setImageBitmap(DownloadImage.instance.getImage(src));
-//
-//		return v1;
-//	}
-	
-	public View createHeaderView(){
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	// private View createHeaderView() {
+	// LayoutInflater inflater1 = (LayoutInflater)
+	// getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	// View v1 = (View) inflater1.inflate(R.layout.header, null, false);
+	//
+	// // title
+	// // TextView txtTitle = (TextView) v1.findViewById(R.id.txtTitle);
+	// // txtTitle.setText(title);
+	//
+	// // ImageView
+	// // ImageView imgView = (ImageView) v1.findViewById(R.id.bg);
+	// // imgView.setImageBitmap(DownloadImage.instance.getImage(src));
+	//
+	// return v1;
+	// }
+
+	public View createHeaderView() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.header_other_video, null);
-		
-		TextView txt_title = (TextView)v.findViewById(R.id.txt_title);
+
+		TextView txt_title = (TextView) v.findViewById(R.id.txt_title);
 		txt_title.setText(title);
 		CustomFontsLoader.setFont(txt_title, 0, instance);
-		
-		TextView txt_time_view = (TextView)v.findViewById(R.id.txt_time_view);
+
+		TextView txt_time_view = (TextView) v.findViewById(R.id.txt_time_view);
 		txt_time_view.setText("Time :" + duration + "| Views :" + download);
 		CustomFontsLoader.setFont(txt_time_view, 0, instance);
-		
+
 		return v;
 	}
-	
-	public View createFooterView(){
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+	public View createFooterView() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.footer_other, null);
+
+		Button bt_Xem_Them = (Button)v.findViewById(R.id.bt_xemthem);
+		bt_Xem_Them.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				new UpdateListView().execute();
+			}
+		});
 		
 		return v;
 	}
+
 	// init ListView
 	public void initListView() {
 		arrayitems = ConnectServer.instance.m_OtherListItem;
@@ -577,9 +832,9 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		listItems = (ListView) findViewById(R.id.listItems);
 		// TODO add header view
 		listItems.addHeaderView(createHeaderView());
-		//TODO add footer view
+		// TODO add footer view
 		listItems.addFooterView(createFooterView());
-	
+
 		listItems.setAdapter(listrecordarray);
 		listItems.setTextFilterEnabled(true);
 		listItems.setFocusableInTouchMode(false);
@@ -592,16 +847,18 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				// Intent mIntent = new Intent(instance, Video.class);
 				// mIntent.putExtra("file", file);
 				// startActivity(mIntent);
-				
-				Item item = arrayitems.get((int)id);
-				Intent mIntent = new Intent(instance, ListOtherVideo.class);
-				mIntent.putExtra("id", item.getId());
-				mIntent.putExtra("title", item.getTitle());
-				mIntent.putExtra("download", item.getDownload());
-				mIntent.putExtra("file", item.getFile());
-				mIntent.putExtra("src", item.getSrc());
-				instance.startActivity(mIntent);
-				instance.finish();
+
+				if (position > 1) {
+					Item item = arrayitems.get((int) id);
+					Intent mIntent = new Intent(instance, ListOtherVideo.class);
+					mIntent.putExtra("id", item.getId());
+					mIntent.putExtra("title", item.getTitle());
+					mIntent.putExtra("download", item.getDownload());
+					mIntent.putExtra("file", item.getFile());
+					mIntent.putExtra("src", item.getSrc());
+					instance.startActivity(mIntent);
+					instance.finish();
+				}
 
 				// final int m_position = position;
 				//
@@ -848,12 +1105,14 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	 *            View the touch event has been dispatched to
 	 */
 	public void stopMedia(View v) {
-		///buttonVibrate();
-		if (play.getVisibility() == Button.GONE) {
-			stop.setVisibility(Button.GONE);
-			play.setVisibility(Button.VISIBLE);
-		}
+		// /buttonVibrate();
+//		if (play.getVisibility() == Button.GONE) {
+//			stop.setVisibility(Button.GONE);
+//			play.setVisibility(Button.VISIBLE);
+//		}
 
+		pauseMedia(true);
+		
 		if (vv.getCurrentPosition() != 0) {
 			vv.pause();
 			vv.seekTo(0);
@@ -895,31 +1154,32 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		loading.hide();
 
 		// video size check (media is a video if size is defined, audio if not)
-//		int h = mp.getVideoHeight();
-//		int w = mp.getVideoWidth();
-//		if (h != 0 && w != 0) {
-//			Log.d(this.getClass().getName(), "logo off");
-//			logo.setVisibility(ImageView.INVISIBLE);
-//		} else {
-//			Log.d(this.getClass().getName(), "logo on");
-//			logo.setVisibility(ImageView.VISIBLE);
-//		}
+		// int h = mp.getVideoHeight();
+		// int w = mp.getVideoWidth();
+		// if (h != 0 && w != 0) {
+		// Log.d(this.getClass().getName(), "logo off");
+		// logo.setVisibility(ImageView.INVISIBLE);
+		// } else {
+		// Log.d(this.getClass().getName(), "logo on");
+		// logo.setVisibility(ImageView.VISIBLE);
+		// }
 
 		// onVideoSizeChangedListener declaration
-//		mp.setOnVideoSizeChangedListener(new OnVideoSizeChangedListener() {
-//			// video size check (media is a video if size is defined, audio if
-//			// not)
-//			@Override
-//			public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-//				if (width != 0 && height != 0) {
-//					Log.d(this.getClass().getName(), "logo off");
-//					logo.setVisibility(ImageView.INVISIBLE);
-//				} else {
-//					Log.d(this.getClass().getName(), "logo on");
-//					logo.setVisibility(ImageView.VISIBLE);
-//				}
-//			}
-//		});
+		// mp.setOnVideoSizeChangedListener(new OnVideoSizeChangedListener() {
+		// // video size check (media is a video if size is defined, audio if
+		// // not)
+		// @Override
+		// public void onVideoSizeChanged(MediaPlayer mp, int width, int height)
+		// {
+		// if (width != 0 && height != 0) {
+		// Log.d(this.getClass().getName(), "logo off");
+		// logo.setVisibility(ImageView.INVISIBLE);
+		// } else {
+		// Log.d(this.getClass().getName(), "logo on");
+		// logo.setVisibility(ImageView.VISIBLE);
+		// }
+		// }
+		// });
 
 		// onBufferingUpdateListener declaration
 		mp.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
@@ -964,7 +1224,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 			@Override
 			public void onFinish() {
-				//stopMedia(null);
+				 stopMedia(null);
 			}
 		};
 
@@ -1007,42 +1267,42 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	 *            View the touch event has been dispatched to
 	 */
 	public void playMedia(View v) {
-//		buttonVibrate();
+		// buttonVibrate();
 		if (readyToPlay) {
 			if (v == play) {
-//				play.setVisibility(Button.GONE);
-//				stop.setVisibility(Button.VISIBLE);
+				// play.setVisibility(Button.GONE);
+				// stop.setVisibility(Button.VISIBLE);
 
 				vv.start();
 				timer.start();
 			} else {
-//				stop.setVisibility(Button.GONE);
-//				play.setVisibility(Button.VISIBLE);
+				// stop.setVisibility(Button.GONE);
+				// play.setVisibility(Button.VISIBLE);
 
 				vv.pause();
 				timer.cancel();
 			}
 		}
 	}
-	
-	public void pauseMedia(boolean play){
-		if(!play){			
+
+	public void pauseMedia(boolean play) {
+		if (!play) {
 			vv.start();
 			timer.start();
 			imgPlay.setVisibility(View.GONE);
-		}else{
+		} else {
 			vv.pause();
 			timer.cancel();
 			imgPlay.setVisibility(View.VISIBLE);
 		}
-		flag_Play=!flag_Play;
+		flag_Play = !flag_Play;
 	}
-	
-//	public void zoomIn(View v){
-//		Intent mIntent = new Intent(instance, Video.class);
-//		mIntent.putExtra("file", file);
-//		startActivity(mIntent);
-//	}
+
+	// public void zoomIn(View v){
+	// Intent mIntent = new Intent(instance, Video.class);
+	// mIntent.putExtra("file", file);
+	// startActivity(mIntent);
+	// }
 
 	/**
 	 * Helper for examples with a HSV that should be scrolled by a menu View's
@@ -1056,8 +1316,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		 */
 		boolean menuOut = false;
 
-		public ClickListenerForScrolling(HorizontalScrollView scrollView,
-				View menu) {
+		public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
 			super();
 			this.scrollView = scrollView;
 			this.menu = menu;
@@ -1107,8 +1366,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			btnWidth = btnSlide.getMeasuredWidth();
 			System.out.println("btnWidth=" + btnWidth);
 
-//			Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(instance, "onGlobalLayout size " + this.btnWidth,
+			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -1119,15 +1378,14 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			if (idx == menuIdx) {
 				dims[0] = w - 2 * btnWidth;
 
-//				Toast.makeText(instance, "getViewSize size " + this.btnWidth,
-//						Toast.LENGTH_SHORT).show();
-//				Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(instance, "getViewSize size " + this.btnWidth,
+				// Toast.LENGTH_SHORT).show();
+				// Toast.makeText(instance, "getViewSize dims[0] " + dims[0],
+				// Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
