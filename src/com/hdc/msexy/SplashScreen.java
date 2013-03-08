@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +47,8 @@ public class SplashScreen extends Activity implements Runnable{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.splash);
+		
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		instance = this;
 		//TODO check connect internet
@@ -84,6 +88,14 @@ public class SplashScreen extends Activity implements Runnable{
 			buidler.setMessage("Bạn vui lòng kiểm tra kết nối Internet !!!");
 			buidler.show();
 		}		
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		super.onConfigurationChanged(newConfig);
 	}
 	
 	// TODO check sim card
@@ -247,6 +259,9 @@ public class SplashScreen extends Activity implements Runnable{
 		
 		//TODO getsms
 		ConnectServer.instance.getSMS();		
+		
+		//TODO get config popup
+		ConnectServer.instance.getConfig_Popup();
 		
 		// TODO send message
 		mHandler.sendEmptyMessage(-1);

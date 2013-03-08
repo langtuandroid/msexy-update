@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import com.hdc.data.Active;
 import com.hdc.data.Advertise;
 import com.hdc.data.Category;
+import com.hdc.data.Config_Popup;
 import com.hdc.data.Data;
 import com.hdc.data.Item;
 import com.hdc.data.Message;
@@ -50,6 +51,7 @@ public class ConnectServer {
 	//public final static String SmsMSexy = "SmsMsexy.php";
 	public final static String SmsMSexy = "syntax_msexy.php";
 	public final static String SmsMSexy_nSMS = "syntax_msexy_nsms.php";
+	public final static String Config_POPUP = "config_popup.php";
 	//HOT - TOP - NEW
 	public final static String video_hot = "video_hot.php";
 	public final static String video_top = "video_top.php";
@@ -102,7 +104,15 @@ public class ConnectServer {
 	public boolean isAirPlane;
 	public boolean isSim;	
 	public int width;
-	public int height; 
+	public int height;
+	
+	//0 : Hot
+	//1 : New
+	//2 : Top
+	public int type_Video = 0;
+	
+	//TODO Config popup
+	public Config_Popup m_ConfigPopup = new Config_Popup();
 
 	// contructor
 	public ConnectServer() {
@@ -372,6 +382,58 @@ public class ConnectServer {
 			e1.printStackTrace();
 		}
 	}
+	
+	// get List data
+	public void getConfig_Popup() {
+		String m_Info = "token" + Equals + TOKEN + And + "type=2";
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + Config_POPUP + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			
+			j = new JSONObject(j.getString("config"));
+			
+			m_ConfigPopup.type_1 = j.getString("1");
+			m_ConfigPopup.type_2 = j.getString("2");
+			
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}	
 	
 	// get List video HOT
 	public void getListVideo_HOT() {
