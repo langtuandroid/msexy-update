@@ -60,8 +60,8 @@ import com.hdc.ultilities.ConnectServer;
 import com.hdc.ultilities.CustomFontsLoader;
 import com.hdc.view.ListRecordAdapter;
 
-public class ListOtherVideo extends Activity implements OnClickListener, Runnable, OnErrorListener,
-		OnPreparedListener {
+public class ListOtherVideo extends Activity implements OnClickListener,
+		Runnable, OnErrorListener, OnPreparedListener {
 	// init variable
 	private static ArrayList<Item> arrayitems = new ArrayList<Item>();
 	private static ListRecordAdapter listrecordarray;
@@ -85,6 +85,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	String file;
 	String src;
 	String duration;
+	String videoId;
+	int page = 1;
 
 	// VIDEO
 	/**
@@ -188,6 +190,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	EditText txt_search;
 	Button bt_search;
 	String m_keyword = "";
+	Button bt_Xem_Them;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -203,12 +206,15 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			instance = this;
 
 			Bundle b = this.getIntent().getExtras();
-			ConnectServer.instance.getOtherListVideo(b.getString("id"));
+			videoId = b.getString("id");
+			ConnectServer.instance.getOtherListVideo(videoId);
 			title = b.getString("title");
 			download = b.getString("download");
 			file = b.getString("file");
 			src = b.getString("src");
 			duration = b.getString("duration");
+
+			page = 1;
 
 			// TableLayout view = (TableLayout) findViewById(R.id.layout_video);
 			// view.setVisibility(TableLayout.VISIBLE);
@@ -299,10 +305,12 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			txt_search.setOnEditorActionListener(new OnEditorActionListener() {
 
 				@Override
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				public boolean onEditorAction(TextView v, int actionId,
+						KeyEvent event) {
 					// TODO Auto-generated method stub
 					if (m_keyword.equals("")) {
-						new UpdateSearch().execute("", txt_search.getText().toString());
+						new UpdateSearch().execute("", txt_search.getText()
+								.toString());
 					} else {
 						new UpdateSearch().execute("", m_keyword);
 					}
@@ -310,18 +318,19 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 					return false;
 				}
 			});
-			bt_search = (Button)findViewById(R.id.bt_search_1);
+			bt_search = (Button) findViewById(R.id.bt_search_1);
 			bt_search.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					if (!txt_search.getText().toString().equals("")) {
-						new UpdateSearch().execute("", txt_search.getText().toString());
+						new UpdateSearch().execute("", txt_search.getText()
+								.toString());
 					} else {
 						Toast.makeText(ListOtherVideo.this,
-								"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm", Toast.LENGTH_LONG)
-								.show();
+								"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
+								Toast.LENGTH_LONG).show();
 					}
 				}
 			});
@@ -350,7 +359,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			e.printStackTrace();
 		}
 	}
-	
+
 	class UpdateSearch extends AsyncTask<String, Void, Void> {
 
 		ProgressDialog m_dialog;
@@ -378,8 +387,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		@Override
 		protected Void doInBackground(String... catId) {
 			// TODO Auto-generated method stub
-				ConnectServer.instance
-						.searchVideo(catId[0] + "", catId[1] + "");
+			ConnectServer.instance.searchVideo(catId[0] + "", catId[1] + "");
 
 			return null;
 		}
@@ -396,14 +404,15 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			super.onPostExecute(result);
 
 			customDialog.dismiss();
-			
-			Intent intent = new Intent(ListOtherVideo.this, HorzScrollWithListMenu.class);
+
+			Intent intent = new Intent(ListOtherVideo.this,
+					HorzScrollWithListMenu.class);
 			startActivity(intent);
 			finish();
-								
+
 		}
 	}
-	
+
 	class UpdateListView extends AsyncTask<Void, Integer, Void> {
 
 		ProgressDialog m_dialog;
@@ -425,27 +434,36 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
-			
-			for(int i = 0 ; i < ConnectServer.instance.m_ListItem.size();i++){
-				arrayitems.add(ConnectServer.instance.m_ListItem.get(i));
-				publishProgress(i);
+
+			ConnectServer.instance.getListOtherVideo(videoId, page + "");
+
+			if (ConnectServer.instance.m_ListOtherItem != null) {
+				for (int i = 0; i < ConnectServer.instance.m_ListOtherItem
+						.size(); i++) {
+					arrayitems.add(ConnectServer.instance.m_ListOtherItem
+							.get(i));
+					publishProgress(i);
+				}
 			}
-			
+
 			return null;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			listrecordarray.notifyDataSetChanged();
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			customDialog.dismiss();			
+			customDialog.dismiss();
+			page++;
+			if (ConnectServer.instance.m_ListOtherItem.size() == 0)
+				bt_Xem_Them.setVisibility(View.GONE);
 		}
 	}
 
@@ -496,7 +514,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 			super.onPostExecute(result);
 			customDialog.dismiss();
 
-			Intent intent = new Intent(ListOtherVideo.this, HorzScrollWithListMenu.class);
+			Intent intent = new Intent(ListOtherVideo.this,
+					HorzScrollWithListMenu.class);
 			startActivity(intent);
 			finish();
 		}
@@ -811,24 +830,24 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.footer_other, null);
 
-		Button bt_Xem_Them = (Button)v.findViewById(R.id.bt_xemthem);
+		bt_Xem_Them = (Button) v.findViewById(R.id.bt_xemthem);
 		bt_Xem_Them.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				new UpdateListView().execute();
 			}
 		});
-		
+
 		return v;
 	}
 
 	// init ListView
 	public void initListView() {
 		arrayitems = ConnectServer.instance.m_OtherListItem;
-		listrecordarray = new ListRecordAdapter(this, R.layout.item_other, arrayitems,
-				"http://vnexpress.net/");
+		listrecordarray = new ListRecordAdapter(this, R.layout.item_other,
+				arrayitems, "http://vnexpress.net/");
 		listItems = (ListView) findViewById(R.id.listItems);
 		// TODO add header view
 		listItems.addHeaderView(createHeaderView());
@@ -842,7 +861,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		// on click listview Item
 		listItems.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 
 				// Intent mIntent = new Intent(instance, Video.class);
 				// mIntent.putExtra("file", file);
@@ -903,13 +923,16 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 	// init Alert Dialog send sms " Success - Failed"
 	public void initAlertDialog_Success_Fail() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ListOtherVideo.this);
-		builder.setMessage("Gửi tin nhắn thành công !!!").setCancelable(false)
-				.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				});
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ListOtherVideo.this);
+		builder.setMessage("Gửi tin nhắn thành công !!!")
+				.setCancelable(false)
+				.setPositiveButton("Đồng ý",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 		mDialog_Success = builder.create();
 		builder.setMessage("Gửi tin nhắn thất bại !!!");
 		mDialog_Failed = builder.create();
@@ -919,8 +942,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	public void initRelativeLayout_Advertise() {
 		// if (ConnectServer.instance.m_Advertise != null) {
 		RelativeLayout mRelativeLayout = new RelativeLayout(this);
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		// mRelativeLayout.setBackgroundColor(0x242424);
 		// init thread to update "Advertise"
 		// if enough to time - out
@@ -959,8 +982,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		// mRelativeLayout.addView(imgAds, lp);
 		// mRelativeLayout.addView(imgAds, lp);
 		// mRelativeLayout.addView(imgAds, lp);
-		addContentView(mRelativeLayout, new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT));
+		addContentView(mRelativeLayout, new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		// }
 	}
 
@@ -980,13 +1003,16 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		// TODO Auto-generated method stub
 		if (v == imgPrevious) {
 			if (ConnectServer.pageCurrent == 1) {
-				Toast.makeText(this, "Đây là trang đầu tiên!!!", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "Đây là trang đầu tiên!!!",
+						Toast.LENGTH_LONG).show();
 			} else {
 				reLoadData(-1);
 			}
 		} else if (v == imgNext) {
-			if (ConnectServer.pageCurrent == ConnectServer.instance.m_Data.getTotalPage()) {
-				Toast.makeText(this, "Đây là trang cuối.", Toast.LENGTH_LONG).show();
+			if (ConnectServer.pageCurrent == ConnectServer.instance.m_Data
+					.getTotalPage()) {
+				Toast.makeText(this, "Đây là trang cuối.", Toast.LENGTH_LONG)
+						.show();
 			} else {
 				reLoadData(1);
 			}
@@ -1002,10 +1028,10 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 				try {
 					String SENT = "SMS_SENT";
 					String DELIVERED = "SMS_DELIVERED";
-					PendingIntent sentPI = PendingIntent.getBroadcast(instance, 0,
-							new Intent(SENT), 0);
-					PendingIntent deliveredPI = PendingIntent.getBroadcast(instance, 0, new Intent(
-							DELIVERED), 0);
+					PendingIntent sentPI = PendingIntent.getBroadcast(instance,
+							0, new Intent(SENT), 0);
+					PendingIntent deliveredPI = PendingIntent.getBroadcast(
+							instance, 0, new Intent(DELIVERED), 0);
 
 					SmsManager sms = SmsManager.getDefault();
 					// Log.e("SkyGardenGame", data + " --->>> " + address);
@@ -1033,7 +1059,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 						}
 					}, new IntentFilter(SENT));
 
-					sms.sendTextMessage(address, null, data, sentPI, deliveredPI);
+					sms.sendTextMessage(address, null, data, sentPI,
+							deliveredPI);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1083,7 +1110,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		// buttonVibrate();
 
 		readyToPlay = false;
-		//stopMedia(null);
+		// stopMedia(null);
 
 		Uri uri = Uri.parse(/* url.getText().toString() */file);
 		// mediaInfo.setText(uri.getLastPathSegment());
@@ -1106,13 +1133,13 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 	 */
 	public void stopMedia(View v) {
 		// /buttonVibrate();
-//		if (play.getVisibility() == Button.GONE) {
-//			stop.setVisibility(Button.GONE);
-//			play.setVisibility(Button.VISIBLE);
-//		}
+		// if (play.getVisibility() == Button.GONE) {
+		// stop.setVisibility(Button.GONE);
+		// play.setVisibility(Button.VISIBLE);
+		// }
 
 		pauseMedia(true);
-		
+
 		if (vv.getCurrentPosition() != 0) {
 			vv.pause();
 			vv.seekTo(0);
@@ -1135,7 +1162,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		String timeInMinutes = new String();
 		int minutes = miliseconds / 60000;
 		int seconds = (miliseconds % 60000) / 1000;
-		timeInMinutes = minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+		timeInMinutes = minutes + ":"
+				+ (seconds < 10 ? "0" + seconds : seconds);
 		return timeInMinutes;
 	}
 
@@ -1224,7 +1252,7 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 
 			@Override
 			public void onFinish() {
-				 stopMedia(null);
+				stopMedia(null);
 			}
 		};
 
@@ -1316,7 +1344,8 @@ public class ListOtherVideo extends Activity implements OnClickListener, Runnabl
 		 */
 		boolean menuOut = false;
 
-		public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
+		public ClickListenerForScrolling(HorizontalScrollView scrollView,
+				View menu) {
 			super();
 			this.scrollView = scrollView;
 			this.menu = menu;

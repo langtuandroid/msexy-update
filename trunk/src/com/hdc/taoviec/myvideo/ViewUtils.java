@@ -21,8 +21,11 @@
  */
 package com.hdc.taoviec.myvideo;
 
+import java.util.ArrayList;
+
 import com.hdc.msexy.HorzScrollWithListMenu;
 import com.hdc.ultilities.ConnectServer;
+import com.hdc.view.ListRecordAdapter_Menu;
 
 import android.content.Context;
 import android.view.View;
@@ -80,23 +83,43 @@ public class ViewUtils {
         });
     }
     
+//    public static void initListView(Context context, ListView listView, int layout) {
+//        // By using setAdpater method in listview we an add string array in list.
+//        String[] arr = new String[ConnectServer.instance.m_ListCategory.size()];
+//        for (int i = 0; i < arr.length; i++) {
+//            arr[i] = ConnectServer.instance.m_ListCategory.get(i).name;
+//        }
+//        listView.setAdapter(new ArrayAdapter<String>(context, layout, arr));
+//        listView.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Context context = view.getContext();
+////                String msg = "item[" + position + "]=" + parent.getItemAtPosition(position);
+////                Toast.makeText(context, msg, 1000).show();
+////                System.out.println(msg);
+//                HorzScrollWithListMenu.instance.select_Menu_Item(position);
+//                
+//                
+//            }
+//        });
+//    }
+    
     public static void initListView(Context context, ListView listView, int layout) {
         // By using setAdpater method in listview we an add string array in list.
-        String[] arr = new String[ConnectServer.instance.m_ListCategory.size()];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = ConnectServer.instance.m_ListCategory.get(i).name;
+        ArrayList<String> arr = new ArrayList<String>();
+        int n = ConnectServer.instance.m_ListCategory.size();
+        arr.add("Tất cả");
+        for (int i = 0; i < n; i++) {
+            arr.add(ConnectServer.instance.m_ListCategory.get(i).name);
         }
-        listView.setAdapter(new ArrayAdapter<String>(context, layout, arr));
+        
+        ListRecordAdapter_Menu adapter = new ListRecordAdapter_Menu(context, layout, arr);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = view.getContext();
-//                String msg = "item[" + position + "]=" + parent.getItemAtPosition(position);
-//                Toast.makeText(context, msg, 1000).show();
-//                System.out.println(msg);
-                HorzScrollWithListMenu.instance.select_Menu_Item(position);
-                
-                
+                HorzScrollWithListMenu.instance.select_Menu_Item(position);                                
             }
         });
     }

@@ -32,11 +32,11 @@ public class SendSMS {
 							// TODO Auto-generated method stub+
 							switch (getResultCode()) {
 							case Activity.RESULT_OK:
-								ConnectServer.instance.m_Active.status = "0";
-								if(ConnectServer.instance.isFirstTime.equals("begin")){
-									ConnectServer.instance.isFirstTime = "end";
-									Toast.makeText(instance, "Bạn đã kích hoạt thành công !!!", Toast.LENGTH_LONG).show();
-								}
+//								ConnectServer.instance.m_Active.status = "0";
+//								if(ConnectServer.instance.isFirstTime.equals("begin")){
+//									ConnectServer.instance.isFirstTime = "end";
+//									Toast.makeText(instance, "Bạn đã kích hoạt thành công !!!", Toast.LENGTH_LONG).show();
+//								}
 								break;
 							case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 								ConnectServer.instance.m_Sms.tryOtherSMS();
