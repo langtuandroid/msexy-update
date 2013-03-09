@@ -69,7 +69,7 @@ public class SplashScreen extends Activity implements Runnable{
 			getInfoFromFile();
 
 			// TODO check sim card
-			isSim = false;//checkSimCard();
+			isSim = checkSimCard();
 			ConnectServer.instance.isSim = isSim;
 
 			// TODO init alert Dialog for Update new version
@@ -251,7 +251,7 @@ public class SplashScreen extends Activity implements Runnable{
 		//TODO get list category
 		getListCategory();
 		
-		ConnectServer.instance.getActive();
+		//ConnectServer.instance.getActive();
 		
 		TelephonyManager manager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		String carrierName = manager.getNetworkOperatorName(); //mobi

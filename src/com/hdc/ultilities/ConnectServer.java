@@ -56,7 +56,7 @@ public class ConnectServer {
 	public final static String video_hot = "video_hot.php";
 	public final static String video_top = "video_top.php";
 	public final static String video_new = "video_new.php";
-	
+	public final static String video_other = "video_other.php";	
 	
 	public final static String v = "1.0";
 	public final static String midp = "2.0";
@@ -94,6 +94,7 @@ public class ConnectServer {
 	public Message m_Message;
 	public static Data m_Data = new Data();
 	public ArrayList<Item> m_ListItem = new ArrayList<Item>();
+	public ArrayList<Item> m_ListOtherItem = new ArrayList<Item>();	
 	public ArrayList<Item> m_OtherListItem = new ArrayList<Item>();
 	public Sms m_Sms = new Sms();
 	public ArrayList<Category> m_ListCategory = new ArrayList<Category>();
@@ -382,6 +383,62 @@ public class ConnectServer {
 			e1.printStackTrace();
 		}
 	}
+	
+	public void getListOtherVideo(String videoId,String page) {
+		String m_Info = "token" + Equals + TOKEN + And + "videoId" + Equals + videoId + And + "p"
+				+ Equals + page;// + And + "record" + Equals + RECORD;
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_other + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+
+			// m_Message = getMessage(j.getString("status"));
+			m_Data = getData(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListOtherItem = aa;
+			
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	
 	// get List data
 	public void getConfig_Popup() {

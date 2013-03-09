@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_gravity="center_vertical|center_horizontal" android:layout_height="fill_parent" android:layout_width="fill_parent">
+  android:layout_gravity="center_vertical|center_horizontal" android:layout_height="match_parent" android:layout_width="match_parent">
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_alignParentLeft="true" android:layout_width="match_parent" android:orientation="vertical" android:gravity="center" android:background="@drawable/khungkichhoat">
 
         <LinearLayout
@@ -33,7 +33,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Bạn có muốn kích hoạt để xem không ?"
                 android:textColor="#000000"
-                android:textSize="16dp" android:textStyle="bold">
+                android:textStyle="bold" android:textSize="14dp" android:layout_gravity="center_horizontal" android:gravity="center_horizontal">
 </TextView>
         </LinearLayout>
         <LinearLayout android:id="@+id/linearLayout2" android:layout_height="match_parent" android:layout_width="match_parent" android:gravity="center_horizontal">

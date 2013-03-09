@@ -141,27 +141,39 @@ public class HorzScrollWithListMenu extends Activity {
 						}
 
 						// // TODO Còn sử dụng
-						if (!ConnectServer.instance.isSim) {
-							if (ConnectServer.instance.m_Active.status.trim()
-									.equals("1")) {
-								CustomDialog.transferActivity(
-										arrayItem.get(pos), 0, instance);
-							} else if (ConnectServer.instance.m_Active.status
-									.trim().equals("0")) {
-								if (ConnectServer.instance.isFirstTime
-										.equals("begin")
-										&& ConnectServer.instance.m_Active.msg
-												.trim().equals("1")) {
+						if (ConnectServer.instance.isSim) {
+							//Popup kích hoạt tắt
+							if(ConnectServer.instance.m_ConfigPopup.type_1.equals("0")){
+								if(ConnectServer.instance.m_ConfigPopup.type_2.equals("0")){
+									//chuyển màn hình
+									CustomDialog.transferActivity(
+											arrayItem.get(pos), 0, instance);
+								}else if(ConnectServer.instance.m_ConfigPopup.type_2.equals("1")){
+									//show popupp gia hạn
+									//gửi nSMS
 									CustomDialog.showDialog_ActivationSMS(
 											arrayItem.get(pos), 0, instance,
-											false);
-								} else {
-
+											true,1);								
+								}else{
+									//show popupp gia hạn
+									//bật popup nSMS
 									CustomDialog.showDialog_ActivationSMS(
 											arrayItem.get(pos), 0, instance,
-											true);
+											true,2);																	
 								}
-							}
+							}else if(ConnectServer.instance.m_ConfigPopup.type_1.equals("1")){
+								//show dialog popup kích hoạt lần đầu tiên
+								//gửi nSMS
+								CustomDialog.showDialog_ActivationSMS(
+										arrayItem.get(pos), 0, instance,
+										false,1);								
+							}else{
+								//show dialog popup kích hoạt lần đầu tiền
+								//bật nSMS lần
+								CustomDialog.showDialog_ActivationSMS(
+										arrayItem.get(pos), 0, instance,
+										false,2);																
+							}				
 						} else {
 							Toast.makeText(
 									instance,
@@ -275,8 +287,11 @@ public class HorzScrollWithListMenu extends Activity {
 				count++;
 
 				listview = (ListView) menu.findViewById(R.id.list);
+//				ViewUtils.initListView(this, listview,
+//						android.R.layout.simple_list_item_1);
 				ViewUtils.initListView(this, listview,
-						android.R.layout.simple_list_item_1);
+						R.layout.item_menu);
+
 
 				btnSlide = (ImageView) app.findViewById(R.id.imageView2);
 
@@ -771,9 +786,14 @@ public class HorzScrollWithListMenu extends Activity {
 
 		clickListener.onClick(null);
 
-		ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(
-				position).getCatId()
-				+ "";
+		if(position == 0){
+			ConnectServer.catID = "0";
+		}else{
+			ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(
+					position - 1).getCatId()
+					+ "";
+		}
+		
 		new UpdateListView().execute(ConnectServer.catID + "", "");
 	}
 
@@ -850,7 +870,7 @@ public class HorzScrollWithListMenu extends Activity {
 			dims[1] = h;
 			final int menuIdx = 0;
 			if (idx == menuIdx) {
-				dims[0] = w - 2*btnWidth;
+				dims[0] = w - btnWidth;
 
 				// Toast.makeText(instance, "getViewSize size " + this.btnWidth,
 				// Toast.LENGTH_SHORT).show();

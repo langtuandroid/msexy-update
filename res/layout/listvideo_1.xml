@@ -119,25 +119,9 @@
                     android:layout_height="match_parent"
                     android:focusable="true"
                     android:focusableInTouchMode="true" >
+                    <EditText android:textSize="16dp" android:text="EditText" android:ems="10" android:layout_weight="0.42" android:layout_height="40dp" android:hint="Tìm kiếm ..." android:singleLine="true" android:layout_width="60dp" android:id="@+id/editText1"></EditText>
+                    <Button android:id="@+id/bt_search" android:text="Button" android:background="@drawable/search" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
                 </LinearLayout>
-
-                <EditText
-                    android:id="@+id/editText1"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="0.42"
-                    android:ems="10"
-                    android:hint="Tìm kiếm ..."
-                    android:singleLine="true"
-                    android:textSize="16dp" >
-                </EditText>
-
-                <Button
-                    android:id="@+id/bt_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search" >
-                </Button>
             </LinearLayout>
 
             <LinearLayout
@@ -153,9 +137,8 @@
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="2.8"
-                    android:ems="10" android:id="@+id/txt_search" android:singleLine="true">
+                    android:ems="10" android:id="@+id/txt_search" android:singleLine="true" android:layout_marginTop="5dp">
 
                     <requestFocus />
                 </EditText>
@@ -165,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.3"
-                    android:background="@drawable/search_button" android:id="@+id/bt_search_1"/>
+                    android:background="@drawable/search_button" android:id="@+id/bt_search_1" android:layout_marginBottom="3dp"/>
             </LinearLayout>
         </TableLayout>
 

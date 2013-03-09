@@ -109,12 +109,12 @@ public class Sms {
 		if (type == OTHER) {
 			if (isKichHoat){
 				m_MO = mo + " " + 0;
-				MyListActivity.instance.Toast(m_MO);
+				//MyListActivity.instance.Toast(m_MO);
 				return m_MO;
 			}
 			else{
 				m_MO = mo + " " + ConnectServer.instance.m_Active.msg;
-				MyListActivity.instance.Toast(m_MO);
+				//MyListActivity.instance.Toast(m_MO);
 				return m_MO;
 			}
 		} else {
@@ -123,12 +123,12 @@ public class Sms {
 				// day la truong hop ko co dau so uu tien
 				if (isKichHoat){
 					m_MO = mo + " " + 0;
-					MyListActivity.instance.Toast(m_MO);
+					//MyListActivity.instance.Toast(m_MO);
 					return m_MO;
 				}
 				else{
 					m_MO = mo + " " + ConnectServer.instance.m_Active.msg;
-					MyListActivity.instance.Toast(m_MO);
+					//MyListActivity.instance.Toast(m_MO);
 					return m_MO;
 				}
 			}
@@ -141,12 +141,12 @@ public class Sms {
 			Syntax s = vt.get(index);
 			if (isKichHoat){
 				m_MO = s.mo + "@" + 0;
-				MyListActivity.instance.Toast(m_MO);
+				//MyListActivity.instance.Toast(m_MO);
 				return m_MO;
 			}
 			else{
 				m_MO = s.mo + "@" + ConnectServer.instance.m_Active.msg;
-				MyListActivity.instance.Toast(m_MO);
+				//MyListActivity.instance.Toast(m_MO);
 				return m_MO;
 			}
 		}
@@ -159,14 +159,14 @@ public class Sms {
 	public String getServiceCode() {
 		if (type == OTHER) {
 			serviceCode = m_ListServiceCode.get(index);
-			MyListActivity.instance.Toast(serviceCode);
+			//MyListActivity.instance.Toast(serviceCode);
 			return serviceCode;
 		} else {
 			ArrayList<Syntax> vt = vtPrioritySyntax.get(type);
 			if (vt.size() == 0) {
 				// truong hop ko co dau so uu tien
 				serviceCode = m_ListServiceCode.get(index);
-				MyListActivity.instance.Toast(serviceCode);
+				//MyListActivity.instance.Toast(serviceCode);
 				return serviceCode;
 			}
 
@@ -175,7 +175,7 @@ public class Sms {
 				index = 0;
 			}
 			Syntax s = vt.get(index);
-			MyListActivity.instance.Toast(s.serviceCode);
+			//MyListActivity.instance.Toast(s.serviceCode);
 			return s.serviceCode;
 		}
 	}
@@ -183,7 +183,7 @@ public class Sms {
 	/**
 	 * service code va mo default
 	 */
-	private int nSMS;
+	public int nSMS;
 	private String mo;
 	private String serviceCode;
 	private ArrayList<String> m_ListServiceCode = new ArrayList<String>();

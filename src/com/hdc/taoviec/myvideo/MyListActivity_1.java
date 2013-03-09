@@ -1197,12 +1197,12 @@ public class MyListActivity_1 extends Activity implements OnClickListener, Runna
 							//ConnectServer.instance.getSMS();
 
 							// initCustomDialog(arrayitems.get(position));
-							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
-									instance,false);
+//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
+//									instance,false);
 						} else {
 							
-							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
-									instance,true);
+//							CustomDialog.showDialog_ActivationSMS(arrayitems.get(position), m_idx,
+//									instance,true);
 							
 							
 //							// TODO lấy cú pháp tin nhắn
