@@ -1,6 +1,6 @@
 /*
  * #%L
- * SlidingMenuDemo
+ * SlidingDemo
  * $Id:$
  * $HeadURL:$
  * %%
@@ -191,11 +191,13 @@ public class HorzScrollWithListMenu extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						if (!flag_Visile_Search)
-							layout_search.setVisibility(View.VISIBLE);
-						else
-							layout_search.setVisibility(View.GONE);
-						flag_Visile_Search = !flag_Visile_Search;
+//						if (!flag_Visile_Search)
+//							layout_search.setVisibility(View.VISIBLE);
+//						else
+//							layout_search.setVisibility(View.GONE);
+//						flag_Visile_Search = !flag_Visile_Search;
+						setVisiblle_LayoutSearch(flag_Visile_Search);
+						flag_Visile_Search = !flag_Visile_Search;		
 					}
 				});
 
@@ -208,6 +210,7 @@ public class HorzScrollWithListMenu extends Activity {
 							public boolean onEditorAction(TextView v,
 									int actionId, KeyEvent event) {
 								// TODO Auto-generated method stub
+								updatePage();
 								if (m_keyword.equals("")) {
 									new UpdateListView().execute("", txt_search
 											.getText().toString());
@@ -233,6 +236,8 @@ public class HorzScrollWithListMenu extends Activity {
 									"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
 									Toast.LENGTH_LONG).show();
 						}
+						setVisiblle_LayoutSearch(flag_Visile_Search);
+						flag_Visile_Search=!flag_Visile_Search;
 					}
 				});
 
@@ -256,8 +261,10 @@ public class HorzScrollWithListMenu extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						updatePage();
 						ConnectServer.instance.type_Video = 0;
 						// TODO Auto-generated method stub
+						setVisiblle_LayoutSearch(true);
 						new UpdateHeader().execute(0);
 					}
 				});
@@ -266,8 +273,9 @@ public class HorzScrollWithListMenu extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						updatePage();
 						ConnectServer.instance.type_Video = 1;
-						
+						setVisiblle_LayoutSearch(true);
 						new UpdateHeader().execute(1);
 					}
 				});
@@ -275,8 +283,10 @@ public class HorzScrollWithListMenu extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						updatePage();
 						ConnectServer.instance.type_Video = 2;
 						// TODO Auto-generated method stub
+						setVisiblle_LayoutSearch(true);
 						new UpdateHeader().execute(2);
 					}
 				});
@@ -318,8 +328,18 @@ public class HorzScrollWithListMenu extends Activity {
 		int scrollToViewIdx = 1;
 		scrollView.initViews(children, scrollToViewIdx,
 				new SizeCallbackForMenu(btnSlide));
+		
+		new updatePromotion().execute();
 	}
 
+	//TODO Visible or gone layout search
+	public void setVisiblle_LayoutSearch(boolean flag){
+		if (!flag)
+			layout_search.setVisibility(View.VISIBLE);
+		else
+			layout_search.setVisibility(View.GONE);
+	}
+	
 	class UpdatePage extends AsyncTask<Void, Void, Void> {
 
 		ProgressDialog m_dialog;
@@ -492,7 +512,15 @@ public class HorzScrollWithListMenu extends Activity {
 		m_BtNext = (Button) v.findViewById(R.id.page_next);
 		promotion = (ImageView) v.findViewById(R.id.promotion);
 
+		if(ConnectServer.instance.pageCurrent == 1){
+			m_BtPrevious.setVisibility(View.GONE);
+		}else{
+			m_BtPrevious.setVisibility(View.VISIBLE);
+		}
+
+		
 		if (flag_FocusPage == 1) {
+			
 			m_BtPage_1.setText(ConnectServer.instance.pageCurrent + "");
 			m_BtPage_2.setText((ConnectServer.instance.pageCurrent + 1) + "");
 			m_BtPage_3.setText((ConnectServer.instance.pageCurrent + 2) + "");
@@ -577,6 +605,8 @@ public class HorzScrollWithListMenu extends Activity {
 					m_BtPrevious.setVisibility(Button.GONE);
 
 				new UpdatePage().execute();
+				
+				setVisiblle_LayoutSearch(true);
 			}
 		});
 
@@ -603,6 +633,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 				CustomFontsLoader.setUnderline(m_BtPage_1);
 				new UpdatePage().execute();
+				
+				setVisiblle_LayoutSearch(true);
 			}
 		});
 
@@ -628,6 +660,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 				CustomFontsLoader.setUnderline(m_BtPage_2);
 				new UpdatePage().execute();
+				
+				setVisiblle_LayoutSearch(true);
 
 			}
 		});
@@ -656,6 +690,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 				new UpdatePage().execute();
 
+				setVisiblle_LayoutSearch(true);
+				
 			}
 		});
 
@@ -738,12 +774,25 @@ public class HorzScrollWithListMenu extends Activity {
 					m_BtPrevious.setVisibility(Button.VISIBLE);
 
 				new UpdatePage().execute();
+				
+				setVisiblle_LayoutSearch(true);
 			}
 		});
 
 		// return v;
 	}
 
+	public void updatePage(){
+		flag_FocusPage = 1;
+		ConnectServer.instance.pageCurrent = 1;
+		m_BtPrevious.setVisibility(View.GONE);
+		m_BtPage_1.setText(m_BtPage_1.getText().toString());
+		m_BtPage_2.setText(m_BtPage_2.getText().toString());
+		m_BtPage_3.setText(m_BtPage_3.getText().toString());
+		m_BtNext.setVisibility(View.VISIBLE);
+		CustomFontsLoader.setUnderline(m_BtPage_1);		
+	}
+	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
@@ -797,6 +846,43 @@ public class HorzScrollWithListMenu extends Activity {
 		new UpdateListView().execute(ConnectServer.catID + "", "");
 	}
 
+	class updatePromotion extends AsyncTask<Void, Integer, Void>{
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			
+			try {
+				Thread.sleep(50000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+			
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);			
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			promotion.setVisibility(View.GONE);
+		}
+	}
+	
+	
+	
 	/**
 	 * Helper for examples with a HSV that should be scrolled by a menu View's
 	 * width.
@@ -870,7 +956,7 @@ public class HorzScrollWithListMenu extends Activity {
 			dims[1] = h;
 			final int menuIdx = 0;
 			if (idx == menuIdx) {
-				dims[0] = w - btnWidth;
+				dims[0] = w - 2*btnWidth;
 
 				// Toast.makeText(instance, "getViewSize size " + this.btnWidth,
 				// Toast.LENGTH_SHORT).show();

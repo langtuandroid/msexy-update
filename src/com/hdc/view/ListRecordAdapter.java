@@ -18,7 +18,7 @@ public class ListRecordAdapter extends ArrayAdapter<Item> {
 	private Context context;
 	private int resourse;
 	private ArrayList<Item> arraylist;
-	private String link;
+	private String type;
 
 	public ListRecordAdapter(Context context, int textViewResourceId,
 			ArrayList<Item> objects, String _link) {
@@ -27,7 +27,7 @@ public class ListRecordAdapter extends ArrayAdapter<Item> {
 		this.context = context;
 		this.resourse = textViewResourceId;
 		this.arraylist = objects;
-		this.link = _link;
+		this.type = _link;
 	}
 
 	public void setList(ArrayList<Item> objects){
@@ -73,10 +73,13 @@ public class ListRecordAdapter extends ArrayAdapter<Item> {
 				title.setText(item.getTitle());
 			}
 			if (date != null) {
-				date.setText("Views : " + item.getDownload());
+				if(type.equals("1"))
+					date.setText("|Xem : " + item.getDownload());
+				else
+					date.setText("Views : " + item.getDownload());
 			}
 			if(!item.getDuration().equals("null")){
-				duration.setText("Times: " + item.getDuration());
+				duration.setText(/*"Times: " +*/ item.getDuration().trim());
 			}else{
 				duration.setText(/*"Times: " + "01:00"*/"");
 			}
