@@ -118,7 +118,9 @@ public class ViewUtils {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = view.getContext();
+            	HorzScrollWithListMenu.instance.setVisiblle_LayoutSearch(true);
+            	HorzScrollWithListMenu.instance.updatePage();
+                //Context context = view.getContext();
                 HorzScrollWithListMenu.instance.select_Menu_Item(position);                                
             }
         });

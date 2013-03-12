@@ -107,6 +107,11 @@ public class ConnectServer {
 	public int width;
 	public int height;
 	
+	public int countTime_Promotion = 0;
+	// turn on = true
+	// turn off = false
+	public boolean flag_TurnOnOff_Promotion = false;
+	
 	//0 : Hot
 	//1 : New
 	//2 : Top

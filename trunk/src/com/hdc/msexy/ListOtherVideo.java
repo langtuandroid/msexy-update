@@ -191,7 +191,8 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 	Button bt_search;
 	String m_keyword = "";
 	Button bt_Xem_Them;
-
+	boolean flag_btXemThem = true;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -214,6 +215,8 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 			src = b.getString("src");
 			duration = b.getString("duration");
 
+			flag_btXemThem = true;
+			
 			page = 1;
 
 			// TableLayout view = (TableLayout) findViewById(R.id.layout_video);
@@ -260,6 +263,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					ConnectServer.instance.pageCurrent = 1;
 					ConnectServer.instance.type_Video = 0;
 					new UpdateHeader().execute(0);
 				}
@@ -270,6 +274,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					ConnectServer.instance.pageCurrent = 1;
 					ConnectServer.instance.type_Video = 1;
 					new UpdateHeader().execute(1);
 				}
@@ -280,6 +285,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					ConnectServer.instance.pageCurrent = 1;
 					ConnectServer.instance.type_Video = 2;
 					new UpdateHeader().execute(2);
 				}
@@ -307,6 +313,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 				@Override
 				public boolean onEditorAction(TextView v, int actionId,
 						KeyEvent event) {
+					ConnectServer.instance.pageCurrent = 1;
 					// TODO Auto-generated method stub
 					if (m_keyword.equals("")) {
 						new UpdateSearch().execute("", txt_search.getText()
@@ -462,8 +469,10 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 			super.onPostExecute(result);
 			customDialog.dismiss();
 			page++;
-			if (ConnectServer.instance.m_ListOtherItem.size() == 0)
+			if (ConnectServer.instance.m_ListOtherItem.size() == 0){
+				flag_btXemThem = false;
 				bt_Xem_Them.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -820,7 +829,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 		CustomFontsLoader.setFont(txt_title, 0, instance);
 
 		TextView txt_time_view = (TextView) v.findViewById(R.id.txt_time_view);
-		txt_time_view.setText("Time :" + duration + "| Views :" + download);
+		txt_time_view.setText(duration + "| Xem :" + download);
 		CustomFontsLoader.setFont(txt_time_view, 0, instance);
 
 		return v;
@@ -836,7 +845,8 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new UpdateListView().execute();
+				if(flag_btXemThem)
+					new UpdateListView().execute();
 			}
 		});
 
@@ -847,7 +857,7 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 	public void initListView() {
 		arrayitems = ConnectServer.instance.m_OtherListItem;
 		listrecordarray = new ListRecordAdapter(this, R.layout.item_other,
-				arrayitems, "http://vnexpress.net/");
+				arrayitems, "1");
 		listItems = (ListView) findViewById(R.id.listItems);
 		// TODO add header view
 		listItems.addHeaderView(createHeaderView());
@@ -868,12 +878,13 @@ public class ListOtherVideo extends Activity implements OnClickListener,
 				// mIntent.putExtra("file", file);
 				// startActivity(mIntent);
 
-				if (position > 1) {
+				if (position > 0 && position < arrayitems.size() + 1) {
 					Item item = arrayitems.get((int) id);
 					Intent mIntent = new Intent(instance, ListOtherVideo.class);
 					mIntent.putExtra("id", item.getId());
 					mIntent.putExtra("title", item.getTitle());
 					mIntent.putExtra("download", item.getDownload());
+					mIntent.putExtra("duration", item.getDuration());
 					mIntent.putExtra("file", item.getFile());
 					mIntent.putExtra("src", item.getSrc());
 					instance.startActivity(mIntent);
