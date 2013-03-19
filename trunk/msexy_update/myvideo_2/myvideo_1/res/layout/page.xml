@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#fcf7f5"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
+
+            <Button
+                android:id="@+id/page_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/title_14"
+                android:text="Trước"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/page_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/title_15"
+                android:text="1"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/page_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/title_13"
+                android:text="2"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/page_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/title_13"
+                android:text="3"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/txtDot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text=". . ." />
+
+            <Button
+                android:id="@+id/page_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_14"
+                android:text="Tiếp"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#242424"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/promotion"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/oreka"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/text_bottom"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
