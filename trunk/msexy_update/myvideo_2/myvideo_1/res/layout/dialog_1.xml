@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_gravity="center_vertical|center_horizontal" android:layout_height="match_parent" android:layout_width="match_parent">
-    <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_alignParentLeft="true" android:layout_width="match_parent" android:orientation="vertical" android:gravity="center" android:background="@drawable/khungkichhoat">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical|center_horizontal" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/khungkichhoat"
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/linearLayout4"
@@ -15,10 +24,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:paddingTop="10dp"
                 android:text="Kích hoạt dịch vụ"
                 android:textColor="#ffffff"
                 android:textSize="18dp"
-                android:textStyle="normal" android:layout_marginTop="3dp">
+                android:textStyle="normal" >
 
 </TextView>
         </LinearLayout>
@@ -26,16 +37,19 @@
 
             <TextView
                 android:id="@+id/txt_content"
-                android:layout_width="fill_parent"
+                android:layout_width="260dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
-                android:text="Bạn có muốn kích hoạt với giá 15.000đ không ?"
+                android:minLines="2"
+                android:paddingTop="10dp"
+                android:text="Bạn có muốn kích hoạt với giá 15.000đ không?"
                 android:textColor="#000000"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="bold" >
 
 </TextView>
