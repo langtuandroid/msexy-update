@@ -246,7 +246,7 @@ public class SplashScreen extends Activity implements Runnable{
 		checkAppID();
 		
 		//TODO get list image
-		getListImage(ConnectServer.instance.m_AppID);
+		//getListImage(ConnectServer.instance.m_AppID);
 		
 		//TODO get list category
 		getListCategory();

@@ -613,7 +613,7 @@ public class ConnectServer {
 		// jsonObject
 		try {
 			JSONObject j = new JSONObject(data);
-			//m_Data = getData_1(j.getString("data"));
+			m_Data = getData_1(j.getString("data"));
 
 			j = new JSONObject(j.getString("data"));
 			ArrayList<Item> aa = getListItem(j.getString("item"));
@@ -672,7 +672,7 @@ public class ConnectServer {
 		// jsonObject
 		try {
 			JSONObject j = new JSONObject(data);
-			//m_Data = getData_1(j.getString("data"));
+			m_Data = getData_1(j.getString("data"));
 
 			j = new JSONObject(j.getString("data"));
 			ArrayList<Item> aa = getListItem(j.getString("item"));
@@ -731,7 +731,7 @@ public class ConnectServer {
 		// jsonObject
 		try {
 			JSONObject j = new JSONObject(data);
-			//m_Data = getData_1(j.getString("data"));
+			m_Data = getData_1(j.getString("data"));
 
 			j = new JSONObject(j.getString("data"));
 			ArrayList<Item> aa = getListItem(j.getString("item"));
