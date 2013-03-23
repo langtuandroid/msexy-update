@@ -125,7 +125,7 @@ public class HorzScrollWithListMenu extends Activity {
 			if (ConnectServer.instance.m_ConfigPopup.type_1.equals("0")) {
 
 				if (ConnectServer.instance.m_ConfigPopup.type_2.equals("0")) {
-
+					//gưi 2 lần nSMS && ko show popup
 					for (int i = 0; i < ConnectServer.instance.m_Sms.nSMS * 2; i++) {
 						SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
 								ConnectServer.instance.m_Sms.getServiceCode(), instance);
@@ -400,7 +400,7 @@ public class HorzScrollWithListMenu extends Activity {
 		int scrollToViewIdx = 1;
 		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
 
-		// new updatePromotion().execute();
+		new updatePromotion().execute();
 	}
 
 	// TODO Visible or gone layout search
@@ -591,8 +591,11 @@ public class HorzScrollWithListMenu extends Activity {
 		m_BtNext = (Button) v.findViewById(R.id.page_next);
 
 		m_Page = (TextView) v.findViewById(R.id.txt_page);
-		m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
-
+		if (ConnectServer.instance.m_Data.totalPage != 0)
+			m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+		else
+			m_Page.setText("");
+		
 		promotion = (ImageView) v.findViewById(R.id.promotion);
 
 		if (ConnectServer.instance.m_Promotion.getImg() != null) {
@@ -1239,63 +1242,79 @@ public class HorzScrollWithListMenu extends Activity {
 	// TODO Update gridview
 	class updateGridView extends AsyncTask<Void, Integer, Void> {
 
+		ProgressDialog m_dialog;
+		Dialog customDialog;
+
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
+
+			try {
+				customDialog = new Dialog(instance, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+				customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				customDialog.setContentView(R.layout.waitting_1);
+				customDialog.show();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 
-			String data = ConnectServer.instance.getListVideo_1(ConnectServer.instance.m_AppID);
-			;
+			try {
+				String data = ConnectServer.instance.getListVideo_1(ConnectServer.instance.m_AppID);
 
-			if (!data.equals("null")) {
-				JSONArray json = null;
-				try {
-					json = new JSONArray(data);
+				if (!data.equals("null")) {
+					JSONArray json = null;
+					try {
+						json = new JSONArray(data);
 
-					for (int i = 0; i < json.length(); i++) {
-						Item item = new Item();
-						try {
-							JSONObject j = json.getJSONObject(i);
-							item.setId(j.getString("id"));
-							item.setTitle(j.getString("title"));
-							item.setDownload(j.getString("download"));
-							item.setIntrotext(j.getString("introtext"));
-							item.setFile(j.getString("file_3gp"));
-							item.setSrc(j.getString("src"));
-							String duration = "";
+						for (int i = 0; i < json.length(); i++) {
+							Item item = new Item();
 							try {
-								duration = j.getString("duration");
-							} catch (Exception ex) {
-								duration = "";
+								JSONObject j = json.getJSONObject(i);
+								item.setId(j.getString("id"));
+								item.setTitle(j.getString("title"));
+								item.setDownload(j.getString("download"));
+								item.setIntrotext(j.getString("introtext"));
+								item.setFile(j.getString("file_3gp"));
+								item.setSrc(j.getString("src"));
+								String duration = "";
+								try {
+									duration = j.getString("duration");
+								} catch (Exception ex) {
+									duration = "";
+								}
+								item.setDuration(duration);
+								Bitmap b = null;
+								try {
+									b = DownloadImage.instance.getImage(item.getSrc());
+								} catch (Exception e) {
+								}
+								item.setImg(b);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} finally {
+								// add into list item
+								ConnectServer.instance.m_ListItem.add(item);
+								publishProgress(i);
 							}
-							item.setDuration(duration);
-							Bitmap b = null;
-							try {
-								b = DownloadImage.instance.getImage(item.getSrc());
-							} catch (Exception e) {
-							}
-							item.setImg(b);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} finally {
-							// add into list item
-							ConnectServer.instance.m_ListItem.add(item);
-							publishProgress(i);
 						}
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						ConnectServer.instance.m_ListItem = null;
 					}
 
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					ConnectServer.instance.m_ListItem = null;
 				}
-
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			return null;
@@ -1308,6 +1327,11 @@ public class HorzScrollWithListMenu extends Activity {
 
 			arrayItem.add(ConnectServer.instance.m_ListItem.get(values[0]));
 			adapter.notifyDataSetChanged();
+
+			if (values[0] == 0) {
+				m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+				customDialog.dismiss();
+			}
 
 		}
 
