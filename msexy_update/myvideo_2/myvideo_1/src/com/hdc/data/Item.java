@@ -13,7 +13,7 @@ public class Item {
 	public String download;
 	public String file_3gp;
 	public String duration;
-	
+
 	public String getDuration() {
 		return duration;
 	}
@@ -56,8 +56,6 @@ public class Item {
 
 	public String introtext;
 	public String file;
-	
-	
 
 	public Bitmap getImg() {
 		return img;
@@ -66,8 +64,7 @@ public class Item {
 	public void setImg(Bitmap img) {
 		this.img = img;
 	}
-	
-	
+
 	public String getId() {
 		return id;
 	}
@@ -82,9 +79,9 @@ public class Item {
 
 	public void setTitle(String title) {
 		this.title = title;
-		
-		if(this.title.length() > 20)
-			this.title = title.substring(0, 20) + " ...";		
+
+		if (this.title.length() > 27)
+			this.title = title.substring(0, 27) + " ...";
 	}
 
 	public String getInfo() {
