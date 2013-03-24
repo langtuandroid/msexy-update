@@ -53,39 +53,45 @@ public class MyAdapter extends BaseAdapter {
 			v = (View) convertView;
 		}
 
-		final Item item = arrayList.get(position);
-		if (item != null) {
-			TextView title = (TextView) v.findViewById(R.id.txtTitle);
-			TextView date = (TextView) v.findViewById(R.id.txtDateTime);
-			TextView duration = (TextView) v.findViewById(R.id.txtDuration);
-			ImageView image = (ImageView) v.findViewById(R.id.imageView1);
+		try {
+			final Item item = arrayList.get(position);
+			if (item != null) {
+				TextView title = (TextView) v.findViewById(R.id.txtTitle);
+				TextView date = (TextView) v.findViewById(R.id.txtDateTime);
+				TextView duration = (TextView) v.findViewById(R.id.txtDuration);
+				ImageView image = (ImageView) v.findViewById(R.id.imageView1);
 
-			if (title != null) {
-				title.setText(item.getTitle());
-				CustomFontsLoader.setFont(title, 0, mContext);
-			}
-			if (date != null) {
-				date.setText("Views:" + item.getDownload());
-				CustomFontsLoader.setFont(date, 0, mContext);
-			}
-			if(!item.getDuration().equals("null")){
-				duration.setText("" + item.getDuration());
-				CustomFontsLoader.setFont(duration, 0, mContext);
-			}else{
-				duration.setText(/*"Times: " + "01:00"*/"");
-				CustomFontsLoader.setFont(duration, 0, mContext);
-			}
-			if (image != null && item.getImg()!=null) {
-				try {					
-					image.setImageBitmap(item.getImg());
-				} catch (Exception e) {
+				if (title != null) {
+					title.setText(item.getTitle());
+					CustomFontsLoader.setFont(title, 0, mContext);
 				}
-			}else{
-				image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.bg));
-//				image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.bg));
+				if (date != null) {
+					date.setText("Views:" + item.getDownload());
+					CustomFontsLoader.setFont(date, 0, mContext);
+				}
+				if (!item.getDuration().equals("null")) {
+					duration.setText("" + item.getDuration());
+					CustomFontsLoader.setFont(duration, 0, mContext);
+				} else {
+					duration.setText(/* "Times: " + "01:00" */"");
+					CustomFontsLoader.setFont(duration, 0, mContext);
+				}
+				if (image != null && item.getImg() != null) {
+					try {
+						image.setImageBitmap(item.getImg());
+					} catch (Exception e) {
+					}
+				} else {
+					image.setImageDrawable(mContext.getResources().getDrawable(
+							R.drawable.bg));
+					// image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(),
+					// R.drawable.bg));
+				}
 			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		
+
 		return v;
 	}
 

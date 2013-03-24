@@ -13,6 +13,7 @@ public class Item {
 	public String download;
 	public String file_3gp;
 	public String duration;
+	public String title_watch;
 
 	public String getDuration() {
 		return duration;
@@ -79,9 +80,14 @@ public class Item {
 
 	public void setTitle(String title) {
 		this.title = title;
+		this.title_watch = title;
 
-		if (this.title.length() > 27)
-			this.title = title.substring(0, 27) + " ...";
+		if (this.title.length() > 20)
+			this.title = title.substring(0, 20) + " ...";
+	}
+
+	public String getTitle_Watch() {
+		return this.title_watch;
 	}
 
 	public String getInfo() {
