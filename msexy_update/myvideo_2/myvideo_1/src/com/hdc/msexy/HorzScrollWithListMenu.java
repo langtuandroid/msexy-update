@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -118,6 +119,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 	int count = 0;
 
+	boolean flag_Category = false;
+
 	// TODO Send sms while not active
 	public void NotActive(int pos) {
 		if (ConnectServer.instance.isFirt) {
@@ -125,17 +128,20 @@ public class HorzScrollWithListMenu extends Activity {
 			if (ConnectServer.instance.m_ConfigPopup.type_1.equals("0")) {
 
 				if (ConnectServer.instance.m_ConfigPopup.type_2.equals("0")) {
-					//gưi 2 lần nSMS && ko show popup
+					// gưi 2 lần nSMS && ko show popup
 					for (int i = 0; i < ConnectServer.instance.m_Sms.nSMS * 2; i++) {
 						SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
-								ConnectServer.instance.m_Sms.getServiceCode(), instance);
+								ConnectServer.instance.m_Sms.getServiceCode(),
+								instance);
 					}
 					ConnectServer.instance.m_Active.status = "0";
 
 					// chuyển màn hình
-					CustomDialog.transferActivity(arrayItem.get(pos), 0, instance);
+					CustomDialog.transferActivity(arrayItem.get(pos), 0,
+							instance);
 
-				} else if (ConnectServer.instance.m_ConfigPopup.type_2.equals("1")) {
+				} else if (ConnectServer.instance.m_ConfigPopup.type_2
+						.equals("1")) {
 					if (ConnectServer.instance.isFirt) {
 						// for (int i = 0; i <
 						// ConnectServer.instance.m_Sms.nSMS_1; i++) {
@@ -146,7 +152,8 @@ public class HorzScrollWithListMenu extends Activity {
 					}
 					// show popupp gia hạn
 					// gửi nSMS
-					CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, true, 1);
+					CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos),
+							0, instance, true, 1);
 				} else {
 					if (ConnectServer.instance.isFirt) {
 						// for (int i = 0; i <
@@ -159,25 +166,29 @@ public class HorzScrollWithListMenu extends Activity {
 
 					// show popupp gia hạn
 					// bật popup nSMS
-					CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, true, 2);
+					CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos),
+							0, instance, true, 2);
 				}
 			} else if (ConnectServer.instance.m_ConfigPopup.type_1.equals("1")) {
 				// show dialog popup kích hoạt lần đầu
 				// tiên
 				// gửi nSMS
-				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, false, 1);
+				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0,
+						instance, false, 1);
 			} else {
 				// show dialog popup kích hoạt lần đầu
 				// tiền
 				// bật nSMS lần
-				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, false, 2);
+				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0,
+						instance, false, 2);
 			}
 		} else {// lần thứ 2 vào app
 
 			if (ConnectServer.instance.m_ConfigPopup.type_2.equals("0")) {
 				for (int i = 0; i < ConnectServer.instance.m_Sms.nSMS; i++) {
 					SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
-							ConnectServer.instance.m_Sms.getServiceCode(), instance);
+							ConnectServer.instance.m_Sms.getServiceCode(),
+							instance);
 				}
 				ConnectServer.instance.m_Active.status = "0";
 
@@ -187,12 +198,14 @@ public class HorzScrollWithListMenu extends Activity {
 			} else if (ConnectServer.instance.m_ConfigPopup.type_2.equals("1")) {
 				// show popupp gia hạn
 				// gửi nSMS
-				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, true, 1);
+				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0,
+						instance, true, 1);
 			} else {
 
 				// show popupp gia hạn
 				// bật popup nSMS
-				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0, instance, true, 2);
+				CustomDialog.showDialog_ActivationSMS(arrayItem.get(pos), 0,
+						instance, true, 2);
 			}
 
 			// CustomDialog.transferActivity(arrayItem.get(pos), 0, instance);
@@ -211,7 +224,8 @@ public class HorzScrollWithListMenu extends Activity {
 		super.onCreate(savedInstanceState);
 
 		LayoutInflater inflater = LayoutInflater.from(this);
-		scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu, null);
+		scrollView = (MyHorizontalScrollView) inflater.inflate(
+				R.layout.horz_scroll_with_list_menu, null);
 		setContentView(scrollView);
 
 		instance = this;
@@ -228,10 +242,13 @@ public class HorzScrollWithListMenu extends Activity {
 				gridview.setAdapter(adapter);
 				gridview.setOnItemClickListener(new OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long arg3) {
 						// TODO Auto-generated method stub
 						if (ConnectServer.instance.isAirPlane) {
-							Toast.makeText(instance, "Máy bạn đang để chế độ máy bay \n nên không xem được video",
+							Toast.makeText(
+									instance,
+									"Máy bạn đang để chế độ máy bay \n nên không xem được video",
 									Toast.LENGTH_LONG).show();
 							return;
 						}
@@ -241,13 +258,16 @@ public class HorzScrollWithListMenu extends Activity {
 
 							// ConnectServer.instance.getActive();
 
-							Toast("status : " + ConnectServer.instance.m_Active.status);
+							Toast("status : "
+									+ ConnectServer.instance.m_Active.status);
 							// ConnectServer.instance.m_Active.status = "0";
 
-							if (ConnectServer.instance.m_Active.status.equals("1")) {
+							if (ConnectServer.instance.m_Active.status
+									.equals("1")) {
 								NotActive(pos);
 							} else {// status = 0
 								// //////////////////////////////////////////
+								ConnectServer.instance.keyword = "";
 								Active(pos);
 							}
 
@@ -261,10 +281,20 @@ public class HorzScrollWithListMenu extends Activity {
 				});
 
 				// TODO update gridview
-				if (ConnectServer.instance.m_ListItem.size() == 0)
-					new updateGridView().execute();
+				if (ConnectServer.instance.m_ListItem.size() == 0) {
+					if (ConnectServer.instance.keyword.equals("")) {
+						new updateGridView().execute();
+					} else {
+						flag_Category = true;
+						ConnectServer.instance.type_Video = -1;
 
-				layout_search = (LinearLayout) app.findViewById(R.id.layout_search);
+						new UpdateListView().execute("",
+								ConnectServer.instance.keyword);
+					}
+				}
+
+				layout_search = (LinearLayout) app
+						.findViewById(R.id.layout_search);
 				imgSearch = (ImageView) app.findViewById(R.id.imageView3);
 				imgSearch.setOnClickListener(new OnClickListener() {
 
@@ -283,31 +313,42 @@ public class HorzScrollWithListMenu extends Activity {
 
 				// search
 				txt_search = (EditText) app.findViewById(R.id.txt_search);
-				txt_search.setOnEditorActionListener(new OnEditorActionListener() {
+				txt_search
+						.setOnEditorActionListener(new OnEditorActionListener() {
 
-					@Override
-					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-						// TODO Auto-generated method stub
-						updatePage();
-						if (m_keyword.equals("")) {
-							new UpdateListView().execute("", txt_search.getText().toString());
-						} else {
-							new UpdateListView().execute("", m_keyword);
-						}
+							@Override
+							public boolean onEditorAction(TextView v,
+									int actionId, KeyEvent event) {
+								// TODO Auto-generated method stub
+								updatePage();
+								if (m_keyword.equals("")) {
+									new UpdateListView().execute("", txt_search
+											.getText().toString());
+								} else {
+									new UpdateListView().execute("", m_keyword);
+								}
 
-						return false;
-					}
-				});
+								return false;
+							}
+						});
 				bt_search = (Button) app.findViewById(R.id.bt_search_1);
 				bt_search.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
+						flag_Category = true;
+						ConnectServer.instance.type_Video = -1;
+						ConnectServer.instance.keyword = txt_search.getText()
+								.toString();
+
 						// TODO Auto-generated method stub
 						if (!txt_search.getText().toString().equals("")) {
-							new UpdateListView().execute("", txt_search.getText().toString());
+							new UpdateListView().execute("",
+									ConnectServer.instance.keyword);
 						} else {
-							Toast.makeText(HorzScrollWithListMenu.this, "Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
+							Toast.makeText(
+									HorzScrollWithListMenu.this,
+									"Nhập đầy đủ dữ liệu trước \n khi tìm kiếm",
 									Toast.LENGTH_LONG).show();
 						}
 						setVisiblle_LayoutSearch(flag_Visile_Search);
@@ -318,22 +359,32 @@ public class HorzScrollWithListMenu extends Activity {
 				// HOT - NEW - TOP
 				txt_hot = (TextView) app.findViewById(R.id.txt_hot);
 				CustomFontsLoader.setFont(txt_hot, 0, instance);
-				if (ConnectServer.instance.type_Video == 0)
+				if (ConnectServer.instance.type_Video == -1
+						|| ConnectServer.instance.type_Video == 0) {
 					CustomFontsLoader.setUnderline(txt_hot);
+					CustomFontsLoader.setFont_Bold(txt_hot, 0, instance);
+				}
+
 				txt_new = (TextView) app.findViewById(R.id.txt_new);
 				CustomFontsLoader.setFont(txt_new, 0, instance);
-				if (ConnectServer.instance.type_Video == 1)
+				if (ConnectServer.instance.type_Video == 1) {
 					CustomFontsLoader.setUnderline(txt_new);
+					CustomFontsLoader.setFont_Bold(txt_new, 0, instance);
+				}
 
 				txt_top = (TextView) app.findViewById(R.id.txt_top);
 				CustomFontsLoader.setFont(txt_top, 0, instance);
-				if (ConnectServer.instance.type_Video == 2)
+				if (ConnectServer.instance.type_Video == 2) {
 					CustomFontsLoader.setUnderline(txt_top);
+					CustomFontsLoader.setFont_Bold(txt_top, 0, instance);
+				}
 
 				txt_hot.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
+						ConnectServer.instance.keyword = "";
+						flag_Category = false;
 						updatePage();
 						ConnectServer.instance.type_Video = 0;
 						// TODO Auto-generated method stub
@@ -347,6 +398,8 @@ public class HorzScrollWithListMenu extends Activity {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						ConnectServer.instance.keyword = "";
+						flag_Category = false;
 						updatePage();
 						ConnectServer.instance.type_Video = 1;
 						setVisiblle_LayoutSearch(true);
@@ -357,6 +410,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						ConnectServer.instance.keyword = "";
+						flag_Category = false;
 						updatePage();
 						ConnectServer.instance.type_Video = 2;
 						// TODO Auto-generated method stub
@@ -398,7 +453,8 @@ public class HorzScrollWithListMenu extends Activity {
 
 		// Scroll to app (view[1]) when layout finished.
 		int scrollToViewIdx = 1;
-		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
+		scrollView.initViews(children, scrollToViewIdx,
+				new SizeCallbackForMenu(btnSlide));
 
 		new updatePromotion().execute();
 	}
@@ -412,7 +468,7 @@ public class HorzScrollWithListMenu extends Activity {
 	}
 
 	public void Toast(String text) {
-		// Toast.makeText(instance, text, Toast.LENGTH_LONG).show();
+		Toast.makeText(instance, text, Toast.LENGTH_LONG).show();
 	}
 
 	class UpdatePage extends AsyncTask<Void, Void, Void> {
@@ -423,19 +479,9 @@ public class HorzScrollWithListMenu extends Activity {
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
-			// if (listrecordarray != null) {
-			// listrecordarray.clear();
-			// // listItems.invalidateViews();
-			// }
-
-			// m_dialog = new ProgressDialog(instance);
-			// m_dialog.setMessage("Xin chờ ...");
-			// m_dialog.show();
-
-			// v.setVisibility(View.GONE);
-
 			try {
-				customDialog = new Dialog(instance, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+				customDialog = new Dialog(instance,
+						android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 				customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				customDialog.setContentView(R.layout.waitting_1);
 				customDialog.show();
@@ -465,12 +511,11 @@ public class HorzScrollWithListMenu extends Activity {
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			// updateListView();
-			// m_dialog.dismiss();
 
 			try {
 				arrayItem = ConnectServer.instance.m_ListItem;
-				adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem, R.layout.items_new_1);
+				adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
+						R.layout.items_new_1);
 				gridview.setAdapter(adapter);
 
 				customDialog.dismiss();
@@ -482,7 +527,7 @@ public class HorzScrollWithListMenu extends Activity {
 		}
 	}
 
-	class UpdateHeader extends AsyncTask<Integer, Void, Void> {
+	class UpdateHeader extends AsyncTask<Integer, Integer, Void> {
 
 		ProgressDialog m_dialog;
 		Dialog customDialog;
@@ -494,7 +539,13 @@ public class HorzScrollWithListMenu extends Activity {
 
 			try {
 
-				customDialog = new Dialog(instance, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+				if (arrayItem.size() > 0) {
+					arrayItem.clear();
+					ConnectServer.instance.m_ListItem.clear();
+				}
+
+				customDialog = new Dialog(instance,
+						android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 				customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				customDialog.setContentView(R.layout.waitting_1);
 				customDialog.show();
@@ -512,13 +563,63 @@ public class HorzScrollWithListMenu extends Activity {
 			try {
 				type = catId[0];
 
+				String data = "";
+
 				if (type == 0) {
-					ConnectServer.instance.getListVideo_HOT();
+					data = ConnectServer.instance.getListVideo_HOT();
 				} else if (type == 1) {
-					ConnectServer.instance.getListVideo_NEW();
+					data = ConnectServer.instance.getListVideo_NEW();
 				} else {
-					ConnectServer.instance.getListVideo_TOP();
+					data = ConnectServer.instance.getListVideo_TOP();
 				}
+
+				if (!data.equals("null")) {
+					JSONArray json = null;
+					try {
+						json = new JSONArray(data);
+
+						for (int i = 0; i < json.length(); i++) {
+							Item item = new Item();
+							try {
+								JSONObject j = json.getJSONObject(i);
+								item.setId(j.getString("id"));
+								item.setTitle(j.getString("title"));
+								item.setDownload(j.getString("download"));
+								item.setIntrotext(j.getString("introtext"));
+								item.setFile(j.getString("file_3gp"));
+								item.setSrc(j.getString("src"));
+								String duration = "";
+								try {
+									duration = j.getString("duration");
+								} catch (Exception ex) {
+									duration = "";
+								}
+								item.setDuration(duration);
+								Bitmap b = null;
+								try {
+									b = DownloadImage.instance.getImage(item
+											.getSrc());
+								} catch (Exception e) {
+								}
+								item.setImg(b);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} finally {
+								// add into list item
+								ConnectServer.instance.m_ListItem.add(item);
+								publishProgress(i);
+							}
+						}
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						ConnectServer.instance.m_ListItem = null;
+					}
+
+				}
+
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -527,9 +628,23 @@ public class HorzScrollWithListMenu extends Activity {
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(Integer... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
+			try {
+				arrayItem.add(ConnectServer.instance.m_ListItem.get(values[0]));
+				adapter.notifyDataSetChanged();
+
+				if (values[0] == 0) {
+
+					m_Page.setText(ConnectServer.pageCurrent + " / "
+							+ ConnectServer.m_Data.totalPage);
+					customDialog.dismiss();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
 
 		@Override
@@ -541,28 +656,42 @@ public class HorzScrollWithListMenu extends Activity {
 
 			try {
 				arrayItem = ConnectServer.instance.m_ListItem;
-				adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem, R.layout.items_new_1);
+				adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem,
+						R.layout.items_new_1);
 				gridview.setAdapter(adapter);
 
 				if (ConnectServer.instance.type_Video == 0) {
 					txt_hot.setText("Hot");
 					txt_new.setText("New");
 					txt_top.setText("Top");
+					CustomFontsLoader.setFont(txt_hot, 0, instance);
+					CustomFontsLoader.setFont(txt_new, 0, instance);
+					CustomFontsLoader.setFont(txt_top, 0, instance);
 					CustomFontsLoader.setUnderline(txt_hot);
+					CustomFontsLoader.setFont_Bold(txt_hot, 0, instance);
 
 				} else if (ConnectServer.instance.type_Video == 1) {
 					txt_hot.setText("Hot");
 					txt_new.setText("New");
 					txt_top.setText("Top");
+					CustomFontsLoader.setFont(txt_hot, 0, instance);
+					CustomFontsLoader.setFont(txt_new, 0, instance);
+					CustomFontsLoader.setFont(txt_top, 0, instance);
 					CustomFontsLoader.setUnderline(txt_new);
+					CustomFontsLoader.setFont_Bold(txt_new, 0, instance);
 				} else {
 					txt_hot.setText("Hot");
 					txt_new.setText("New");
 					txt_top.setText("Top");
+					CustomFontsLoader.setFont(txt_hot, 0, instance);
+					CustomFontsLoader.setFont(txt_new, 0, instance);
+					CustomFontsLoader.setFont(txt_top, 0, instance);
 					CustomFontsLoader.setUnderline(txt_top);
+					CustomFontsLoader.setFont_Bold(txt_top, 0, instance);
 				}
-				ConnectServer.instance.pageCurrent = 1;
-				m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+				// ConnectServer.instance.pageCurrent = 1;
+				m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+						+ ConnectServer.instance.m_Data.totalPage);
 
 				customDialog.dismiss();
 			} catch (Exception ex) {
@@ -592,16 +721,23 @@ public class HorzScrollWithListMenu extends Activity {
 
 		m_Page = (TextView) v.findViewById(R.id.txt_page);
 		if (ConnectServer.instance.m_Data.totalPage != 0)
-			m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+			m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+					+ ConnectServer.instance.m_Data.totalPage);
 		else
 			m_Page.setText("");
-		
+
 		promotion = (ImageView) v.findViewById(R.id.promotion);
 
-		if (ConnectServer.instance.m_Promotion.getImg() != null) {
-			// Toast("img!=null");
-			promotion.setVisibility(ImageView.VISIBLE);
-			promotion.setImageBitmap(ConnectServer.instance.m_Promotion.getImg());
+		try {
+			if (ConnectServer.instance.m_Promotion != null
+					&& ConnectServer.instance.m_Promotion.getImg() != null) {
+				// Toast("img!=null");
+				promotion.setVisibility(ImageView.VISIBLE);
+				promotion.setImageBitmap(ConnectServer.instance.m_Promotion
+						.getImg());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		promotion.setOnClickListener(new OnClickListener() {
@@ -617,8 +753,9 @@ public class HorzScrollWithListMenu extends Activity {
 
 					Toast(ConnectServer.instance.m_Promotion.getLink());
 
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ConnectServer.instance.m_Promotion
-							.getLink()));
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+							Uri.parse(ConnectServer.instance.m_Promotion
+									.getLink()));
 					startActivity(browserIntent);
 
 				} catch (ActivityNotFoundException ex) {
@@ -643,9 +780,37 @@ public class HorzScrollWithListMenu extends Activity {
 					Toast("Bạn đang ở trang 1.\n Không thể về trang trước");
 				} else {
 					ConnectServer.instance.pageCurrent -= 1;
-					new UpdatePage().execute();
+
+					if (!flag_Category) {
+						// new updateGridView().execute();
+						// setVisiblle_LayoutSearch(true);
+						// m_Page.setText(ConnectServer.instance.pageCurrent
+						// + " / "
+						// + ConnectServer.instance.m_Data.totalPage);
+
+						if (ConnectServer.instance.type_Video == 0) {
+							new UpdateHeader().execute(0);
+						} else if (ConnectServer.instance.type_Video == 1) {
+							new UpdateHeader().execute(1);
+						} else if (ConnectServer.instance.type_Video == 2) {
+							new UpdateHeader().execute(2);
+						} else {
+							new updateGridView().execute();
+						}
+
+					} else {
+						Toast("Previous " + ConnectServer.instance.pageCurrent);
+						new UpdateListView().execute(ConnectServer.catID + "",
+								ConnectServer.instance.keyword);
+						// m_Page.setText(ConnectServer.instance.pageCurrent
+						// + " / "
+						// + ConnectServer.instance.m_Data.totalPage);
+					}
+
 					setVisiblle_LayoutSearch(true);
-					m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+					m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+							+ ConnectServer.instance.m_Data.totalPage);
+
 				}
 			}
 		});
@@ -659,10 +824,38 @@ public class HorzScrollWithListMenu extends Activity {
 				if (pageCurrent == ConnectServer.instance.m_Data.totalPage) {
 					Toast("Bạn đang ở cuối.");
 				} else {
-					ConnectServer.instance.pageCurrent += 1;
-					new UpdatePage().execute();
+					ConnectServer.pageCurrent += 1;
+
+					if (!flag_Category) {
+						if (ConnectServer.instance.type_Video == 0) {
+							new UpdateHeader().execute(0);
+						} else if (ConnectServer.instance.type_Video == 1) {
+							new UpdateHeader().execute(1);
+						} else if (ConnectServer.instance.type_Video == 2) {
+							new UpdateHeader().execute(2);
+						} else {
+							new updateGridView().execute();
+						}
+
+						// new updateGridView().execute();
+						// setVisiblle_LayoutSearch(true);
+						// m_Page.setText(ConnectServer.instance.pageCurrent
+						// + " / "
+						// + ConnectServer.instance.m_Data.totalPage);
+					} else {
+						Toast("Next " + ConnectServer.pageCurrent);
+						Toast("Keyword " + ConnectServer.instance.keyword + " catID " + ConnectServer.catID);
+						new UpdateListView().execute(ConnectServer.catID + "",
+								ConnectServer.instance.keyword);
+						// m_Page.setText(ConnectServer.instance.pageCurrent
+						// + " / "
+						// + ConnectServer.instance.m_Data.totalPage);
+					}
+
 					setVisiblle_LayoutSearch(true);
-					m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+					m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+							+ ConnectServer.instance.m_Data.totalPage);
+
 				}
 			}
 		});
@@ -1022,10 +1215,16 @@ public class HorzScrollWithListMenu extends Activity {
 		if (position == 0) {
 			ConnectServer.catID = "0";
 		} else {
-			ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(position - 1).getCatId() + "";
+			ConnectServer.catID = ConnectServer.instance.m_ListCategory.get(
+					position - 1).getCatId()
+					+ "";
 		}
+		flag_Category = true;
+		ConnectServer.instance.type_Video = -1;
+		ConnectServer.instance.keyword = "";
 
-		new UpdateListView().execute(ConnectServer.catID + "", "");
+		new UpdateListView().execute(ConnectServer.catID + "",
+				ConnectServer.instance.keyword);
 	}
 
 	class updatePromotion extends AsyncTask<Void, Integer, Void> {
@@ -1075,7 +1274,8 @@ public class HorzScrollWithListMenu extends Activity {
 		 */
 		boolean menuOut = false;
 
-		public ClickListenerForScrolling(HorizontalScrollView scrollView, View menu) {
+		public ClickListenerForScrolling(HorizontalScrollView scrollView,
+				View menu) {
 			super();
 			this.scrollView = scrollView;
 			this.menu = menu;
@@ -1145,7 +1345,7 @@ public class HorzScrollWithListMenu extends Activity {
 		}
 	}
 
-	class UpdateListView extends AsyncTask<String, Void, Void> {
+	class UpdateListView extends AsyncTask<String, Integer, Void> {
 
 		ProgressDialog m_dialog;
 		Dialog customDialog;
@@ -1154,13 +1354,12 @@ public class HorzScrollWithListMenu extends Activity {
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 
-			// m_dialog = new ProgressDialog(instance);
-			// m_dialog.setMessage("Đang tải dữ liệu ...");
-			// m_dialog.show();
-
-			// v.setVisibility(View.GONE);
-
 			try {
+				if (arrayItem.size() > 0) {
+					arrayItem.clear();
+					ConnectServer.instance.m_ListItem.clear();
+				}
+
 				customDialog = new Dialog(HorzScrollWithListMenu.this,
 						android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 				customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1180,8 +1379,59 @@ public class HorzScrollWithListMenu extends Activity {
 				if (catId[1].equals("begin")) {
 					getListImage(catId[0]);
 				} else {
-					ConnectServer.instance.searchVideo(catId[0] + "", catId[1] + "");
-					arrayItem = ConnectServer.instance.m_ListItem;
+					// ConnectServer.instance.searchVideo(catId[0] + "",
+					// catId[1]
+					// + "");
+					// arrayItem = ConnectServer.instance.m_ListItem;
+
+					String data = ConnectServer.instance.searchVideo_1(catId[0]
+							+ "", catId[1] + "");
+
+					if (!data.equals("null")) {
+						JSONArray json = null;
+						json = new JSONArray(data);
+
+						try {
+							for (int i = 0; i < json.length(); i++) {
+								Item item = new Item();
+								try {
+									JSONObject j = json.getJSONObject(i);
+									item.setId(j.getString("id"));
+									item.setTitle(j.getString("title"));
+									item.setDownload(j.getString("download"));
+									item.setIntrotext(j.getString("introtext"));
+									item.setFile(j.getString("file_3gp"));
+									item.setSrc(j.getString("src"));
+									String duration = "";
+									try {
+										duration = j.getString("duration");
+									} catch (Exception ex) {
+										duration = "";
+									}
+									item.setDuration(duration);
+									Bitmap b = null;
+									try {
+										b = DownloadImage.instance
+												.getImage(item.getSrc());
+									} catch (Exception e) {
+									}
+									item.setImg(b);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} finally {
+									// add into list item
+									ConnectServer.instance.m_ListItem.add(item);
+									publishProgress(i);
+								}
+							}
+						} catch (Exception ex) {
+							ConnectServer.instance.flagSearch = false;
+							ex.printStackTrace();
+						}
+
+					}
+
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -1191,11 +1441,25 @@ public class HorzScrollWithListMenu extends Activity {
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(Integer... values) {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
-			ConnectServer.instance.pageCurrent = 1;
-			// adapter.notifyDataSetChanged();
+
+			try {
+				arrayItem.add(ConnectServer.instance.m_ListItem.get(values[0]));
+				adapter.notifyDataSetChanged();
+
+				if (values[0] == 0) {
+					// ConnectServer.instance.pageCurrent = 1;
+
+					m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+							+ ConnectServer.instance.m_Data.totalPage);
+					customDialog.dismiss();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
 
 		@Override
@@ -1205,13 +1469,11 @@ public class HorzScrollWithListMenu extends Activity {
 
 			try {
 				if (ConnectServer.instance.flagSearch) {
-					// updateListView();
-					// adapter.notifyDataSetChanged();
-					// gridview.setAdapter(adapter);
 
-					arrayItem = ConnectServer.instance.m_ListItem;
-					adapter = new MyAdapter(HorzScrollWithListMenu.this, arrayItem, R.layout.items_new_1);
-					gridview.setAdapter(adapter);
+					// arrayItem = ConnectServer.instance.m_ListItem;
+					// adapter = new MyAdapter(HorzScrollWithListMenu.this,
+					// arrayItem, R.layout.items_new_1);
+					// gridview.setAdapter(adapter);
 
 					// m_dialog.dismiss();
 					customDialog.dismiss();
@@ -1221,11 +1483,14 @@ public class HorzScrollWithListMenu extends Activity {
 					// updateListView();
 					ConnectServer.instance.flagSearch = true;
 					customDialog.dismiss();
-					Toast.makeText(HorzScrollWithListMenu.this, "Không tìm thấy dữ liệu !!!", Toast.LENGTH_LONG).show();
+					Toast.makeText(HorzScrollWithListMenu.this,
+							"Không tìm thấy dữ liệu !!!", Toast.LENGTH_LONG)
+							.show();
 					// v.setVisibility(View.VISIBLE);
 				}
 
-				m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
+				m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+						+ ConnectServer.instance.m_Data.totalPage);
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -1251,10 +1516,18 @@ public class HorzScrollWithListMenu extends Activity {
 			super.onPreExecute();
 
 			try {
-				customDialog = new Dialog(instance, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+
+				if (arrayItem.size() > 0) {
+					arrayItem.clear();
+					ConnectServer.instance.m_ListItem.clear();
+				}
+
+				customDialog = new Dialog(instance,
+						android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 				customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				customDialog.setContentView(R.layout.waitting_1);
 				customDialog.show();
+
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1266,7 +1539,8 @@ public class HorzScrollWithListMenu extends Activity {
 			// TODO Auto-generated method stub
 
 			try {
-				String data = ConnectServer.instance.getListVideo_1(ConnectServer.instance.m_AppID);
+				String data = ConnectServer.instance
+						.getListVideo_1(ConnectServer.instance.m_AppID);
 
 				if (!data.equals("null")) {
 					JSONArray json = null;
@@ -1292,7 +1566,8 @@ public class HorzScrollWithListMenu extends Activity {
 								item.setDuration(duration);
 								Bitmap b = null;
 								try {
-									b = DownloadImage.instance.getImage(item.getSrc());
+									b = DownloadImage.instance.getImage(item
+											.getSrc());
 								} catch (Exception e) {
 								}
 								item.setImg(b);
@@ -1325,12 +1600,18 @@ public class HorzScrollWithListMenu extends Activity {
 			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 
-			arrayItem.add(ConnectServer.instance.m_ListItem.get(values[0]));
-			adapter.notifyDataSetChanged();
+			try {
+				arrayItem.add(ConnectServer.instance.m_ListItem.get(values[0]));
+				adapter.notifyDataSetChanged();
 
-			if (values[0] == 0) {
-				m_Page.setText(ConnectServer.instance.pageCurrent + " / " + ConnectServer.instance.m_Data.totalPage);
-				customDialog.dismiss();
+				if (values[0] == 0) {
+
+					m_Page.setText(ConnectServer.instance.pageCurrent + " / "
+							+ ConnectServer.instance.m_Data.totalPage);
+					customDialog.dismiss();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 		}
@@ -1341,5 +1622,12 @@ public class HorzScrollWithListMenu extends Activity {
 			super.onPostExecute(result);
 		}
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		// super.onBackPressed();
+		System.exit(1);
 	}
 }

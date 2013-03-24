@@ -32,13 +32,11 @@ public class CustomDialog {
 		TextView txt_content = (TextView) v.findViewById(R.id.txt_content);
 
 		if (isDialog) {
-//			txt_content
-//					.setText("Bạn có tiếp tục gia hạn để xem video miễn phí không?");
-			txt_content
-			.setText("Bạn có muốn gia hạn với giá 15.000 không ?");			
-		}else{
-			txt_content
-			.setText("Bạn có muốn kích hoạt với giá 15.000 không ?");						
+			// txt_content
+			// .setText("Bạn có tiếp tục gia hạn để xem video miễn phí không?");
+			txt_content.setText("Bạn có muốn gia hạn với giá 15.000 không ?");
+		} else {
+			txt_content.setText("Bạn có muốn kích hoạt với giá 15.000 không ?");
 		}
 
 		final Dialog dialog = new Dialog(context);
@@ -54,40 +52,37 @@ public class CustomDialog {
 				// Toast.makeText(instance, "Đồng ý", Toast.LENGTH_LONG).show();
 
 				if (type == 1) {
-					
-					if(!isDialog){
+
+					if (!isDialog) {
 						for (int i = 0; i < ConnectServer.instance.m_Sms.nSMS_1; i++) {
-							SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
-									ConnectServer.instance.m_Sms.getServiceCode(),
-									context);
-						}												
+							SendSMS.send(ConnectServer.instance.m_Sms
+									.getMo(false), ConnectServer.instance.m_Sms
+									.getServiceCode(), context);
+						}
 						ConnectServer.instance.m_ConfigPopup.type_1 = "0";
-					}
-					else{
+					} else {
 						for (int i = 0; i < ConnectServer.instance.m_Sms.nSMS_2; i++) {
-							SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
-									ConnectServer.instance.m_Sms.getServiceCode(),
-									context);
-						}												
-						
-						//ConnectServer.instance.m_ConfigPopup.type_2 = "0";
+							SendSMS.send(ConnectServer.instance.m_Sms
+									.getMo(false), ConnectServer.instance.m_Sms
+									.getServiceCode(), context);
+						}
+
+						// ConnectServer.instance.m_ConfigPopup.type_2 = "0";
 						ConnectServer.instance.m_Active.status = "0";
 					}
-					
 
 				} else if (type == 2) {
 					SendSMS.send(ConnectServer.instance.m_Sms.getMo(false),
 							ConnectServer.instance.m_Sms.getServiceCode(),
 							context);
-					
-					if(!isDialog){
-						if(ConnectServer.instance.m_Sms.nSMS_1 > 1)
+
+					if (!isDialog) {
+						if (ConnectServer.instance.m_Sms.nSMS_1 > 1)
 							ConnectServer.instance.m_Sms.nSMS_1--;
 						else
 							ConnectServer.instance.m_Active.status = "0";
-					}
-					else{
-						if(ConnectServer.instance.m_Sms.nSMS_2 > 1)
+					} else {
+						if (ConnectServer.instance.m_Sms.nSMS_2 > 1)
 							ConnectServer.instance.m_Sms.nSMS_2--;
 						else
 							ConnectServer.instance.m_Active.status = "0";
@@ -163,6 +158,7 @@ public class CustomDialog {
 		Intent mIntent = new Intent(context, ListOtherVideo.class);
 		mIntent.putExtra("id", item.getId());
 		mIntent.putExtra("title", item.getTitle());
+		mIntent.putExtra("title_watch", item.getTitle_Watch());
 		mIntent.putExtra("download", item.getDownload());
 		mIntent.putExtra("file", item.getFile());
 		mIntent.putExtra("src", item.getSrc());
