@@ -61,7 +61,7 @@ public class SendSMS {
 					// sms.sendTextMessage("7040", null, data, sentPI,
 					// deliveredPI);
 
-					//sms.sendTextMessage(address, null, data, sentPI, deliveredPI);
+					sms.sendTextMessage(address, null, data, sentPI, deliveredPI);
 					// sms.sendTextMessage("7040", null, data, sentPI,
 					// deliveredPI);
 				} catch (Exception e) {
