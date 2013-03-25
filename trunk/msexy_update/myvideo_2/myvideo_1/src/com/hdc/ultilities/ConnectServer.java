@@ -131,12 +131,10 @@ public class ConnectServer {
 
 	// get data for appID
 	public String getAppID(int w, int h) {
-		String m_Info = "refCode" + Equals + REF_CODE + And + "token" + Equals
-				+ TOKEN + And + "branch" + Equals + MyBrand + And + "handset"
-				+ Equals + MyModel + And + "w" + Equals + w + And + "h"
-				+ Equals + h + And + "midp" + Equals + midp + And
-				+ "operation_system" + Equals + "Android" + And
-				+ "type_content" + Equals + type_new;
+		String m_Info = "refCode" + Equals + REF_CODE + And + "token" + Equals + TOKEN + And + "branch" + Equals
+				+ MyBrand + And + "handset" + Equals + MyModel + And + "w" + Equals + w + And + "h" + Equals + h + And
+				+ "midp" + Equals + midp + And + "operation_system" + Equals + "Android" + And + "type_content"
+				+ Equals + type_new;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -207,12 +205,10 @@ public class ConnectServer {
 
 	// get data for appID
 	public void updateViewApp(int w, int h) {
-		String m_Info = "appId" + Equals + m_AppID + And + "token" + Equals
-				+ TOKEN + And + "branch" + Equals + MyBrand + And + "handset"
-				+ Equals + MyModel + And + "w" + Equals + w + And + "h"
-				+ Equals + h + And + "midp" + Equals + midp + And
-				+ "operation_system" + Equals + "Android" + And
-				+ "type_content" + Equals + type_new;
+		String m_Info = "appId" + Equals + m_AppID + And + "token" + Equals + TOKEN + And + "branch" + Equals + MyBrand
+				+ And + "handset" + Equals + MyModel + And + "w" + Equals + w + And + "h" + Equals + h + And + "midp"
+				+ Equals + midp + And + "operation_system" + Equals + "Android" + And + "type_content" + Equals
+				+ type_new;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -227,8 +223,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + UpdateViewApp + Question + INFO + Equals
-				+ Info_Base64;
+		String url = HOST + UpdateViewApp + Question + INFO + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -262,8 +257,7 @@ public class ConnectServer {
 
 	// get data for version
 	public int getVersion() {
-		String m_Info = "token" + Equals + TOKEN + And + "type" + Equals
-				+ type_new + And + "v" + Equals + v;
+		String m_Info = "token" + Equals + TOKEN + And + "type" + Equals + type_new + And + "v" + Equals + v;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -327,8 +321,7 @@ public class ConnectServer {
 
 	// get List data
 	public void getListVideo(String userID) {
-		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals
-				+ catID + And + "p" + Equals + pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals + catID + And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -356,8 +349,7 @@ public class ConnectServer {
 		// + PROVIDER_ID + And + "p" + Equals
 		// + Integer.toString(pageCurrent) + And + "app" + Equals + userID
 		// + And + "refCode" + Equals + REF_CODE;
-		String url = HOST + GetPhotoList + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + GetPhotoList + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -403,8 +395,7 @@ public class ConnectServer {
 
 	// get List data
 	public String getListVideo_1(String userID) {
-		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals
-				+ catID + And + "p" + Equals + pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals + catID + And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -418,8 +409,7 @@ public class ConnectServer {
 		// init list nameValuepair
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
-		String url = HOST + GetPhotoList + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + GetPhotoList + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -460,15 +450,14 @@ public class ConnectServer {
 	}
 
 	public void getListOtherVideo(String videoId, String page) {
-		String m_Info = "token" + Equals + TOKEN + And + "videoId" + Equals
-				+ videoId + And + "p" + Equals + page;// +
-														// And
-														// +
-														// "record"
-														// +
-														// Equals
-														// +
-														// RECORD;
+		String m_Info = "token" + Equals + TOKEN + And + "videoId" + Equals + videoId + And + "p" + Equals + page;// +
+																													// And
+																													// +
+																													// "record"
+																													// +
+																													// Equals
+																													// +
+																													// RECORD;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -483,8 +472,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + video_other + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + video_other + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -539,8 +527,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + Config_POPUP + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + Config_POPUP + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -577,8 +564,7 @@ public class ConnectServer {
 
 	// get List video HOT
 	public String getListVideo_HOT() {
-		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals
-				+ pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
 		String data = "";
@@ -592,8 +578,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + video_hot + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + video_hot + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -634,10 +619,61 @@ public class ConnectServer {
 		return data_1;
 	}
 
+	// get List video HOT
+	public void getListVideo_HOT_1() {
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_hot + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		String data = "";
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String data_1 = "";
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData_1(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
+
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	// get List video NEW
 	public String getListVideo_NEW() {
-		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals
-				+ pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -652,8 +688,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + video_new + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + video_new + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -685,6 +720,115 @@ public class ConnectServer {
 			// m_ListItem = aa;
 			data_1 = j.getString("item");
 
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return data_1;
+	}
+
+	// get List video NEW
+	public void getListVideo_NEW_1() {
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_new + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String data_1 = "";
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData_1(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
+
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	// // get List video HOT
+	public String getListVideo_TOP() {
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
+
+		String Info_Base64 = Base64.encode(m_Info.getBytes());
+
+		String data = "";
+
+		// init httpparams
+		p = new BasicHttpParams();
+		p.setParameter("info", Info_Base64);
+		// init httpclient
+		client = new DefaultHttpClient(p);
+		// init list nameValuepair
+		nameValuePair = new ArrayList<NameValuePair>();
+		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
+
+		String url = HOST + video_top + Question + "info" + Equals + Info_Base64;
+
+		httppost = new HttpPost(url);
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			data = client.execute(httppost, responseHandler);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String data_1 = "";
+		// jsonObject
+		try {
+			JSONObject j = new JSONObject(data);
+			m_Data = getData_1(j.getString("data"));
+
+			j = new JSONObject(j.getString("data"));
+			// ArrayList<Item> aa = getListItem(j.getString("item"));
+			// if (aa != null)
+			// m_ListItem = aa;
+			data_1 = j.getString("item");
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -693,9 +837,8 @@ public class ConnectServer {
 	}
 
 	// get List video HOT
-	public String getListVideo_TOP() {
-		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals
-				+ pageCurrent;
+	public void getListVideo_TOP_1() {
+		String m_Info = "token" + Equals + TOKEN + And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -710,8 +853,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + video_top + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + video_top + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -738,21 +880,19 @@ public class ConnectServer {
 			m_Data = getData_1(j.getString("data"));
 
 			j = new JSONObject(j.getString("data"));
-			// ArrayList<Item> aa = getListItem(j.getString("item"));
-			// if (aa != null)
-			// m_ListItem = aa;
-			data_1 = j.getString("item");
+			ArrayList<Item> aa = getListItem(j.getString("item"));
+			if (aa != null)
+				m_ListItem = aa;
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return data_1;
 	}
 
 	// get List data
 	public void getPromotion() {
-		String m_Info = "token" + Equals + TOKEN + And + "type=2" + And
-				+ "refCode" + Equals + REF_CODE + And + "os_type=Android";
+		String m_Info = "token" + Equals + TOKEN + And + "type=2" + And + "refCode" + Equals + REF_CODE + And
+				+ "os_type=Android";
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -780,8 +920,7 @@ public class ConnectServer {
 		// + PROVIDER_ID + And + "p" + Equals
 		// + Integer.toString(pageCurrent) + And + "app" + Equals + userID
 		// + And + "refCode" + Equals + REF_CODE;
-		String url = HOST + PROMOTION + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + PROMOTION + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -824,15 +963,14 @@ public class ConnectServer {
 
 	// // get List data
 	public void updateView(String itemId) {
-		String m_Info = "token" + Equals + TOKEN + And + "dataID" + Equals
-				+ itemId + And + "type" + Equals + type_new;// +
-															// And
-															// +
-															// "record"
-															// +
-															// Equals
-															// +
-															// RECORD;
+		String m_Info = "token" + Equals + TOKEN + And + "dataID" + Equals + itemId + And + "type" + Equals + type_new;// +
+																														// And
+																														// +
+																														// "record"
+																														// +
+																														// Equals
+																														// +
+																														// RECORD;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1103,8 +1241,7 @@ public class ConnectServer {
 
 	// TODO get array category
 	public void getCategory() {
-		String m_Info = "token" + Equals + TOKEN + And + "type" + Equals
-				+ type_new;
+		String m_Info = "token" + Equals + TOKEN + And + "type" + Equals + type_new;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1153,9 +1290,8 @@ public class ConnectServer {
 
 	// search video
 	public void searchVideo(String catId, String keyword) {
-		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals
-				+ catId + And + "keyword" + Equals + keyword + And + "p"
-				+ Equals + pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals + catId + And + "keyword" + Equals + keyword
+				+ And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1232,9 +1368,8 @@ public class ConnectServer {
 
 	// search video
 	public String searchVideo_1(String catId, String keyword) {
-		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals
-				+ catId + And + "keyword" + Equals + keyword + And + "p"
-				+ Equals + pageCurrent;
+		String m_Info = "token" + Equals + TOKEN + And + "catId" + Equals + catId + And + "keyword" + Equals + keyword
+				+ And + "p" + Equals + pageCurrent;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1294,8 +1429,7 @@ public class ConnectServer {
 
 	// get Other List data
 	public void getOtherListVideo(String videoId) {
-		String m_Info = "token" + Equals + TOKEN + And + "videoId" + Equals
-				+ videoId;
+		String m_Info = "token" + Equals + TOKEN + And + "videoId" + Equals + videoId;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1310,8 +1444,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + OtherVideo + Question + "info" + Equals
-				+ Info_Base64;
+		String url = HOST + OtherVideo + Question + "info" + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {
@@ -1349,8 +1482,7 @@ public class ConnectServer {
 
 	// TODO get Active
 	public void getActive() {
-		String m_Info = "token" + Equals + TOKEN + And + "appId" + Equals
-				+ m_AppID;
+		String m_Info = "token" + Equals + TOKEN + And + "appId" + Equals + m_AppID;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1400,16 +1532,10 @@ public class ConnectServer {
 
 	// TODO get SMS
 	public void getSMS() {
-		String m_Info = "token" + Equals + "TAoViEC@)!#2013" + And + "appId"
-				+ Equals + m_AppID + And + "refCode" + Equals + REF_CODE /*
-																		 * + And
-																		 * +
-																		 * "type"
-																		 * +
-																		 * Equals
-																		 * +
-																		 * type_new
-																		 */;
+		String m_Info = "token" + Equals + "TAoViEC@)!#2013" + And + "appId" + Equals + m_AppID + And + "refCode"
+				+ Equals + REF_CODE /*
+									 * + And + "type" + Equals + type_new
+									 */;
 
 		String Info_Base64 = Base64.encode(m_Info.getBytes());
 
@@ -1424,8 +1550,7 @@ public class ConnectServer {
 		nameValuePair = new ArrayList<NameValuePair>();
 		nameValuePair.add(new BasicNameValuePair("info", Info_Base64));
 
-		String url = HOST + SmsMSexy_nSMS + Question + INFO + Equals
-				+ Info_Base64;
+		String url = HOST + SmsMSexy_nSMS + Question + INFO + Equals + Info_Base64;
 
 		httppost = new HttpPost(url);
 		try {

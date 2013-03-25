@@ -37,5 +37,11 @@
     <item
         android:drawable="@drawable/h_12"
         android:duration="30"/>
+    <item
+        android:drawable="@drawable/h_13"
+        android:duration="30"/>
+    <item
+        android:drawable="@drawable/h_14"
+        android:duration="30"/>
 
 </animation-list>
